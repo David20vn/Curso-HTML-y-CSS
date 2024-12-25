@@ -1,8 +1,16 @@
 .formulario {
   background-color: blue;
-  padding: 10px;
+  padding: 10px 50px;
 }
 
 .formulario-imput {
-  padding: 10px;
+  padding: 5px;
+  width: 80%;
+}
+
+.box {
+  background: black;
+  height: 50px;
+  width: 50px;
+  margin: 10px;
 }
