@@ -1,0 +1,33 @@
+body{
+  background: black;
+}
+
+.targeta{
+  background-color: blue;
+  margin: auto;
+  width: 300px;
+  text-align: center;
+  font-family: sans-serif;
+  color: white;
+
+  border: 5px solid white;
+  border-radius: 6px 50px;
+}
+
+.parrafo {
+  background-color:blueviolet;
+  padding: 20px;
+  font-weight: 100;
+  font-size: 10px;
+}
+
+h2 {
+  font-weight: 80;
+  font-size: 18px;
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 25px;
+}
