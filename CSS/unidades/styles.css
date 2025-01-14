@@ -1,0 +1,9 @@
+body{
+  font-family: sans-serif;
+}
+
+div {
+  background-color: hsl(185, 40%, 88%);
+  padding: 20px;
+  border-left: 10px solid hsl(185, 100%, 50%);
+}
