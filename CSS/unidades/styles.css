@@ -5,5 +5,14 @@ body{
 div {
   background-color: hsl(185, 40%, 88%);
   padding: 20px;
-  border-left: 10px solid hsl(185, 100%, 50%);
+  border-left: 10px solid hsl(185, 80%, 45%);
+}
+
+h1 {
+  font-size: 23px;
+  margin: 0;
+}
+p {
+  font-size: 13px;
+  color: hsl(185, 30%, 30%)
 }
