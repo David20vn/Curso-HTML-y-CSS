@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background: #555;
+  background: #333;
   color: white;
 }
 .box-1 {
@@ -39,5 +39,15 @@ body {
 .gradiente {
   width: 200px;
   height: 200px;
-  background: linear-gradient( red, transparent );
+  background: linear-gradient( to top, red, transparent );
+  margin: auto;
+  border-top: 5px solid hsl(0, 60%, 50%);
+}
+
+.sombra {
+  margin:10px auto;
+  height: 200px;
+  width: 200px;
+  background: hsl(180, 40%, 70%);
+  box-shadow: 0 0 30px 0 #fff8;
 }
