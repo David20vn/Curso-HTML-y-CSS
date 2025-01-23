@@ -1,0 +1,7 @@
+img[src^="1"] {
+  width: 100%;
+}
+
+ul li {
+  color: #666
+}
