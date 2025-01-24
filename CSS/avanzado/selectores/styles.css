@@ -2,6 +2,16 @@ img[src^="1"] {
   width: 100%;
 }
 
-ul li {
-  color: #666
+ul > li {
+  color: #666;
+}
+
+/* selector de hermanos */
+
+h1 ~ p {
+  color: blue;
+}
+
+h1:hover {
+  color: blueviolet;
 }
