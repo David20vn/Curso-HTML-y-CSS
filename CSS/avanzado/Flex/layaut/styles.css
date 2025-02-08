@@ -1,8 +1,11 @@
 body {
   margin: 0;
-  background-color: #333;
+  background-color: gold;
   box-sizing: border-box;
+  font-family: sans-serif;
 }
+
+/* header section */
 
 header {
   background-image: url(../../../../imagenes/cadenas-fondo.jpg);
@@ -16,13 +19,21 @@ header {
   box-sizing: border-box;
   background-color: #000a;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   position: absolute;
   z-index: 0;
 }
 
 .header-content p {
   text-wrap: pretty;
+}
+
+.header-content img {
+  min-width: 200px;
+  max-width: 30%;
+  border-radius: 150%;
+  border: solid gold 6px;
+  margin: 50px;
 }
 
 .header-content {
@@ -32,8 +43,48 @@ header {
   text-align: center;
   box-sizing: border-box;
   max-width: 700px;
+  bottom: 10%;
 }
 
 h1 {
   margin: 0;
+  font-size: 50px;
+}
+
+/* nav section */
+
+nav {
+  background-color: #000;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 40px;
+
+}
+
+nav img {
+width: 55px;
+
+}
+
+.nav__lista {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.nav__link {
+  color: gold;
+  padding: 12px;
+  margin: 8px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.nav__link:hover {
+  border-radius: 30px;
+  background-color: rgba(255, 215, 0, 0.2);
+}
+
+.nav__item {
+  list-style: none;
 }
