@@ -62,8 +62,7 @@ nav {
 }
 
 nav img {
-width: 55px;
-
+  width: 55px;
 }
 
 .nav__lista {
@@ -75,7 +74,7 @@ width: 55px;
 .nav__link {
   color: gold;
   padding: 12px;
-  margin: 8px;
+  margin: 10px;
   text-decoration: none;
   display: inline-block;
 }
@@ -87,4 +86,15 @@ width: 55px;
 
 .nav__item {
   list-style: none;
+}
+
+.nav--login {
+  background-color: gold;
+  color: #000;
+  border-radius: 30px;
+  padding: 12px 20px;
+}
+
+.nav--login:hover {
+  background-color: rgba(255, 215, 0, 0.65);
 }
