@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+div, body {
+  box-sizing: border-box;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.flex-item {
+  min-width: 200px;
+  max-width: 300px;
+  background-color: #aaa;
+  flex: 1;
+  padding: 10px;
+  margin: 10px;
+}
