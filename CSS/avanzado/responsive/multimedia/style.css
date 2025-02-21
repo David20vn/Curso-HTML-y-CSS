@@ -7,6 +7,11 @@ div, body {
   box-sizing: border-box;
 }
 
-img {
+.contenedor {
   max-width: 100%;
+  aspect-ratio: 16/9;
+}
+
+video {
+  width: 100%;
 }
