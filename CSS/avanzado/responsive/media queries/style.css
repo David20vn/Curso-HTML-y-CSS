@@ -6,12 +6,3 @@ body {
 div, body {
   box-sizing: border-box;
 }
-
-.contenedor {
-  max-width: 100%;
-  aspect-ratio: 16/9;
-}
-
-video {
-  width: 100%;
-}
