@@ -9,17 +9,26 @@ body div {
 
 .grid-container{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  grid-template-rows: repeat(all, 1fr);
-  height: 90vh;
-  border: 3px solid #000;
-  gap: 20px;
-  margin: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-rows: 100px;
+  gap: 12px;
+  padding: 12px;
+
 }
 
 .grid-item {
+  border-radius: 10px;
+  max-width: 100%;
   background-color: #48e;
-  padding: 10px;
-  font-size: 20px;
-  color: #fff;
+}
+
+.grid-item:hover{
+  opacity: 0.8;
+}
+
+.grid-item:first-child{
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 3;
 }
