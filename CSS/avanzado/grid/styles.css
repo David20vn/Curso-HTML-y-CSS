@@ -5,8 +5,23 @@ body {
 
 .grid-container{
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 150px);
+  gap: 10px;
+  padding: 10px;
+  justify-items: center;
 }
 
 .grid-item {
+background-color: #48e;
+color: #fff;
+font-size: 30px;
+border-radius: 10px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
 
+.grid-item:hover {
+  opacity: 0.7;
 }
