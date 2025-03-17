@@ -5,15 +5,17 @@ body {
 
 .grid-container{
   display: grid;
-  grid-template-columns: repeat(3, 80px);
-  grid-template-rows: repeat(3, 80px);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   gap: 10px;
   padding: 10px;
+  margin: 10px;
   border: 2px solid #000;
-  height: 500px;
-  justify-content: space-evenly;
-  align-items: center;
-  align-content: end;
+}
+
+.grid-item:first-child{
+  background-color: #e44;
+  grid-area: 2/2/span 2/span 2;
 }
 
 .grid-item {
@@ -24,6 +26,7 @@ border-radius: 10px;
 display: flex;
 justify-content: center;
 align-items: center;
+padding: 7px;
 }
 
 .grid-item:hover {
