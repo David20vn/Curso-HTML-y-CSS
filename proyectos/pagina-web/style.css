@@ -4,8 +4,8 @@
 
 body {
   font-family: sans-serif;
-  background-color: #111;
-  color: #ccc;
+  background-color: #ddd;
+  color: #eb1;
 }
 
 a, div, ul, nav, header, footer, a, li, label, body {
@@ -16,10 +16,14 @@ a, div, ul, nav, header, footer, a, li, label, body {
 /* header */
 
 header {
-  background-color: #eb1;
+  background-color: #111;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
+}
+
+.header__logo, .header__open-nav-button {
+  margin: 0 30px;
 }
 
 .header__logo img {
@@ -31,10 +35,44 @@ header {
   width: 64px;
 }
 
+.header__nav {
+  display: none;
+  background-color: #ddd;
+  position: absolute;
+  top: 0;
+  z-index: -1;
+  height: 100vh;
+  width: 100vw;
+}
+
+.header__nav-list {
+  display: flex;
+  height: 40vh;
+  width: 100vw;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: auto;
+  color: #111;
+}
+
 .header__checkbox {
   display: none;
 }
 
+.header__checkbox:checked ~ .header__nav {
+  display: flex;
+}
+
 .header__open-nav-button {
-  color: #111;
+  font-size: 40px;
+}
+
+.header__nav-item {
+  list-style: none;
+}
+
+.header__nav-item a {
+  color: #eb1;
+  text-decoration: none;
 }
