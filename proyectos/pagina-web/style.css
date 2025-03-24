@@ -39,31 +39,31 @@ header {
 
 .header__nav {
   display: none;
-  background-color: #ddd;
   position: absolute;
   top: 0;
-  z-index: -1;
   height: 100vh;
   width: 100vw;
 }
 
 .header__nav-list {
   display: flex;
-  height: 40vh;
+  height: 70vh;
   width: 100vw;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
   margin: auto;
-  color: #111;
+  color: #eb1;
 }
 
-.header__checkbox {
-  display: none;
-}
+
 
 .header__checkbox:checked ~ .header__nav {
   display: flex;
+}
+
+.header__checkbox {
+  opacity: 0; 
 }
 
 .header__open-nav-button {
@@ -75,7 +75,7 @@ header {
 }
 
 .header__nav-item a {
-  color: #111;
+  color: #eb1;
 }
 
 .header__nav-item a:not(:hover){
@@ -85,11 +85,10 @@ header {
 @container header ( min-width: 600px){
   .header__nav {
     display: block;
-    background-color: transparent;
     position: static;
-    z-index: 10;
     height: auto;
     width: auto;
+    z-index: 1;
   }
 
   .header__nav-list {
@@ -99,9 +98,9 @@ header {
     justify-content: space-evenly;
     align-items: center;
     margin: auto;
-    color: #eb1;
+    gap: 30px;
+    margin-right: 40px;
   }
-  
 
   .header__open-nav-button {
     display: none;
