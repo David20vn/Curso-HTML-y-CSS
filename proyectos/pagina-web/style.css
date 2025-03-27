@@ -22,6 +22,7 @@ header {
   justify-content: space-between;
   container-type: inline-size;
   container-name: header;
+  box-shadow: 0 0 8px #1118;
 }
 
 .header__logo, .header__open-nav-button {
@@ -43,6 +44,7 @@ header {
   top: 0;
   height: 100vh;
   width: 100vw;
+  z-index: -1;
 }
 
 .header__nav-list {
@@ -106,3 +108,6 @@ header {
     display: none;
   }
 }
+
+/* profile */
+
