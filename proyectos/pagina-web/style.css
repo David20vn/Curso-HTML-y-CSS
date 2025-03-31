@@ -111,7 +111,12 @@ header {
 
 /* main */
 
-.profile_wrapper{
+.profile {
+  container-type: inline-size;
+  container-name: profile;
+}
+
+.profile__wrapper{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -146,19 +151,43 @@ p {
 
 .profile__skill {
   display: flex;
+  gap: 10px;
   align-items: center;
   margin: 10px;
 }
 
 .load-bar {
-  border: 2px solid #26a;
+  border: 2px solid #48e;
   border-radius: 8px;
-  padding: 6px;
+  padding: 4px;
+  width: 80%;
 }
 
 .load-bar__bar {
   background-color: #48e;
   color: #fff;
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 6px;
+}
+
+.bar--80 {
+  width: 80%;
+}
+.bar--70 {
+  width: 70%;
+}
+.bar--60 {
+  width: 60%;
+}
+
+.profile__skill-name {
+  color: #48e;
+}
+
+/* container queries */
+
+@container profile ( min-width: 720px ){
+  .profile__wrapper {
+    flex-direction: row;
+  }
 }
