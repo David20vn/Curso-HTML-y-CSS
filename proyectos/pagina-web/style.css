@@ -22,6 +22,8 @@ header {
   container-type: inline-size;
   container-name: header;
   box-shadow: 0 0 8px #1118;
+  position: relative;
+  z-index: 20;
 }
 
 .header__logo, .header__open-nav-button {
@@ -37,15 +39,6 @@ header {
   width: 64px;
 }
 
-.header__nav {
-  display: none;
-  position: absolute;
-  top: 0;
-  height: 100vh;
-  width: 100vw;
-  z-index: -1;
-}
-
 .header__nav-list {
   display: flex;
   height: 70vh;
@@ -54,13 +47,22 @@ header {
   justify-content: space-evenly;
   align-items: center;
   margin: auto;
-  color: #eb1;
+  color: #48e;
 }
 
+.header__nav {
+  display: none;
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #111;
+  z-index: -1;
+}
 
-
-.header__checkbox:checked ~ .header__nav {
+.header__checkbox:checked ~ .header__nav  {
   display: flex;
+
 }
 
 .header__checkbox {
@@ -69,6 +71,7 @@ header {
 
 .header__open-nav-button {
   font-size: 40px;
+  color: #48e;
 }
 
 .header__nav-item {
@@ -76,7 +79,7 @@ header {
 }
 
 .header__nav-item a {
-  color: #eb1;
+  color: #48e;
 }
 
 .header__nav-item a:not(:hover){
