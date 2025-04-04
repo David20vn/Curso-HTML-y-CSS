@@ -24,6 +24,8 @@ header {
   box-shadow: 0 0 8px #1118;
   position: relative;
   z-index: 20;
+  text-align: center;
+  font-size: 1.2rem;
 }
 
 .header__logo, .header__open-nav-button {
