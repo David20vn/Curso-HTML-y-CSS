@@ -4,7 +4,7 @@
 
 body {
   font-family: sans-serif;
-  background-color: rgb(151, 184, 232);
+  background-color: rgb(178, 200, 231);
 }
 
 a, div, ul, nav, header, footer, a, li, label, body {
@@ -302,3 +302,34 @@ p {
     grid-column: 1/5 ;
   }
 }
+
+/* contact */
+
+.contact {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contact__form {
+  width: 100%;
+  padding: 20px;
+  height: 70%;
+}
+
+.contact__form-info :is( input, textarea ){
+  width: 100%;
+  margin: 4px 0;
+  padding: 5px;
+  resize: none;
+  font-family: inherit;
+  border: none;
+
+}
+
+.contact__form-info input[type="submit"]{
+  background-color: #48e;
+  color: #fff;
+}
+
