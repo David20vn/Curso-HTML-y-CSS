@@ -4,7 +4,7 @@
 
 body {
   font-family: sans-serif;
-  background-color: rgb(178, 200, 231);
+  background-color: rgb(212, 225, 243);
 }
 
 a, div, ul, nav, header, footer, a, li, label, body {
@@ -310,26 +310,85 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
+  container-name: contact;
+  container-type: inline-size;
+}
+
+.contact h2 {
+  font-size: 2rem;
+  margin-top: 50px;
 }
 
 .contact__form {
   width: 100%;
-  padding: 20px;
-  height: 70%;
+  padding: 0 20px 20px 20px;
+  height: 100%;
+  display: flex;
 }
 
 .contact__form-info :is( input, textarea ){
   width: 100%;
-  margin: 4px 0;
   padding: 5px;
   resize: none;
   font-family: inherit;
   border: none;
-
+}
+.contact__form-info {
+  flex-grow: 0.7;
+  margin: auto;
 }
 
 .contact__form-info input[type="submit"]{
   background-color: #48e;
   color: #fff;
+  padding: 12px;
 }
 
+.contact__input-container :is(input, textarea){
+  border-radius: 4px;
+  box-shadow: 2px 2px 4px #0002;
+}
+
+.contact__input-container {
+  margin-top: 5px;
+}
+
+@container contact ( min-width: 200px ){
+  .contact__form {
+    background-color: rgba(123, 141, 167, 0.3);
+    border-radius: 6px;
+    width: 70%;
+    height: 70%;
+  }
+
+  .contact__form-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    grid-template-areas:
+    "nombre apellido"
+    "email email"
+    "mensaje mensaje"
+    "submit sumbit";
+  }
+
+  .contact__input-container:nth-child(1){
+    grid-area: nombre;
+  }
+  .contact__input-container:nth-child(2){
+    grid-area: apellido;
+  }
+  .contact__input-container:nth-child(3){
+    grid-area: email;
+  }
+  .contact__input-container:nth-child(4){
+    grid-area: mensaje;
+  }
+  .contact__input-container:nth-child(5){
+    grid-area: submit;
+  }
+  
+  .contact__input-container {
+    width: 100%;
+  }
+}
