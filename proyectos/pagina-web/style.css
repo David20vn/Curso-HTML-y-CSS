@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -261,6 +262,7 @@ p {
   background-size: cover;
   display: grid;
   place-content: center;
+  border-radius: 5px;
 }
 
 .portfolio__project:hover {
@@ -306,7 +308,7 @@ p {
 /* contact */
 
 .contact {
-  height: 70vh;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -353,12 +355,15 @@ p {
   margin-top: 5px;
 }
 
-@container contact ( min-width: 200px ){
+@container contact ( min-width: 800px ){
   .contact__form {
     background-color: rgba(123, 141, 167, 0.3);
     border-radius: 6px;
     width: 70%;
-    height: 70%;
+    height: auto;
+    max-width: 700px;
+    padding: 15px;
+    box-shadow: 0 0 6px #0005;
   }
 
   .contact__form-info {
@@ -369,7 +374,7 @@ p {
     "nombre apellido"
     "email email"
     "mensaje mensaje"
-    "submit sumbit";
+    "submit submit";
   }
 
   .contact__input-container:nth-child(1){
@@ -391,4 +396,16 @@ p {
   .contact__input-container {
     width: 100%;
   }
+}
+
+/* footer */
+
+footer {
+  width: 100vw;
+  height: 20vh;
+  background-color: rgb(20, 26, 36);
+  text-align: center;
+  align-content: center;
+  color: #fff;
+  font-size: 20px;
 }
