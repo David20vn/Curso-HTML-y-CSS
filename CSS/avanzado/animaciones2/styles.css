@@ -1,5 +1,30 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: sans-serif;
   background-color: #ccc;
+}
+
+.box {
+  margin: 20px;
+  padding: 8px;
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 39px;
+}
+
+.barra {
+  padding: 40px;
+  background-color: #48e;
+  border-radius: 30px;
+  width: 10%;
+  transition: width 1s steps(5);
+}
+
+.barra:active {
+  width: 100%;
+  transition-duration: 5s;
 }
