@@ -24,12 +24,38 @@ body {
   letter-spacing: 3px;
   font-weight: bold;
   font-size: 30px;
+  position: relative;
+  overflow: hidden;
 }
 
+/* btn 1 */
+
 .btn1 {
-  border: 5px solid #48e;
+  border: 3px solid #48e;
 }
 
 .btn1::before {
-  content: "*";
+  content: '';
+  background-color: #48e;
+  display: block;
+  height: 150%;
+  width: 200%;
+  border-radius: 50%;
+  position: absolute;
+  z-index: -1;
+  top: 100%;
+  left: 30%;
+  transition: top .8s, left .8s;
+}
+
+.btn1:hover::before {
+  top: -40%;
+  left: -50%;
+}
+
+/* btn 2 */
+
+.btn2 {
+  border: 3px solid #fff4;
+  color: #fff4;
 }
