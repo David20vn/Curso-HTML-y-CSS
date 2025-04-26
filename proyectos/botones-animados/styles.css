@@ -21,7 +21,7 @@ body {
   background-color: transparent;
   border-radius: 15px;
   color: #fff;
-  letter-spacing: 3px;
+  letter-spacing: 5px;
   font-weight: bold;
   font-size: 30px;
   position: relative;
@@ -58,4 +58,48 @@ body {
 .btn2 {
   border: 3px solid #fff4;
   color: #fff4;
+}
+
+.btn2:hover{
+  animation: parpadear 1s infinite alternate;
+}
+
+@keyframes parpadear {
+  0% {
+    color: #fff4;
+    border: 3px solid #fff4;
+    text-shadow: none;
+    box-shadow: none;
+  }
+
+  20%{
+    color: rgb(131, 175, 240);
+    border: 3px solid rgb(131, 173, 238);
+    box-shadow: 0 0 9px rgb(45, 70, 108), 0 0 16px rgb(57, 69, 87);
+    text-shadow: 0 0 9px rgba(49, 70, 104, 0.933), 0 0 3px rgba(154, 189, 237, 0.93);
+  }
+
+  40%{
+    color: #fff4;
+    border: 3px solid #fff4;
+    text-shadow: none;
+    box-shadow: none;
+  }
+
+  60%{
+    color: rgb(131, 175, 240);
+    text-shadow: 0 0 9px rgba(49, 70, 104, 0.933), 0 0 3px rgba(154, 189, 237, 0.93);
+  }
+
+  80%{
+    color: #fff4;
+    border: 3px solid #fff4;
+    text-shadow: none;
+    box-shadow: none;
+  }
+
+  100%{
+    border: 3px solid rgb(131, 173, 238);
+    box-shadow: 0 0 9px rgb(45, 70, 108), 0 0 16px rgb(57, 69, 87);
+  }
 }
