@@ -6,6 +6,13 @@ body {
   margin: 0;
   font-family: sans-serif;
   background-color: #ccc;
+  height: 200vh;
+}
+
+.container {
+  height: 50vh;
+  scroll-timeline: asignado;
+  overflow-y: scroll;
 }
 
 .box {
@@ -14,6 +21,8 @@ body {
   background-color: #fff;
   border: 2px solid #000;
   border-radius: 39px;
+  position: fixed;
+  width: 90%;
 }
 
 .barra {
@@ -21,18 +30,8 @@ body {
   background-color: #48e;
   border-radius: 30px;
   width: 10%;
-  animation-name: llenar-barra;
-  animation-duration: 1.5s;
-  animation-delay: 1s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: 4;
-  animation-timing-function: linear;
-  animation-direction: alternate;
-  animation-play-state: paused;
-}
-
-.barra:active {
-  animation-play-state:running;
+  animation: llenar-barra;
+  animation-timeline: asignado;
 }
 
 @keyframes llenar-barra {

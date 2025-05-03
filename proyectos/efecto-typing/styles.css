@@ -16,15 +16,21 @@ body {
   align-items: center;
   height: 100vh;
   margin: auto;
+  filter: drop-shadow( 0 0 12px #fff);
 }
 
 .text{
   color: #fff;
   font-size: 40px;
-  letter-spacing: 8px;
-  animation: grow 1s steps(5);
+  letter-spacing: 6px;
+  animation: grow 1.5s steps(12);
   overflow: hidden;
   position: relative;
+  white-space: nowrap;
+}
+
+.text::selection{
+  background-color: transparent;
 }
 
 @keyframes grow {
@@ -44,7 +50,7 @@ body {
   position: absolute;
   right: 0;
   border-radius: 4px;
-  animation: twinkle 1s infinite;
+  animation: twinkle 1s infinite alternate;
 }
 
 @keyframes twinkle {
