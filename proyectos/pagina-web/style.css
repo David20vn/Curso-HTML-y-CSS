@@ -16,12 +16,10 @@ a, div, ul, nav, header, footer, a, li, label, body {
 /* header */
 
 header {
-  background-color: #111;
+  background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  container-type: inline-size;
-  container-name: header;
   box-shadow: 0 0 8px #1118;
   position: relative;
   z-index: 20;
@@ -56,10 +54,10 @@ header {
 .header__nav {
   display: none;
   position: absolute;
+  background-color: #fff;
   top: 0;
   height: 100vh;
   width: 100vw;
-  background-color: #111;
   z-index: -1;
 }
 
@@ -89,9 +87,19 @@ header {
   text-decoration: none;
 }
 
-@container header ( min-width: 600px){
+@media screen and ( min-width: 600px){
+
+  header {
+    padding: 15px 0;
+    animation: adapt-header both;
+    animation-timeline: scroll();
+    position: sticky;
+    top: 0;
+  }
+
   .header__nav {
     display: block;
+
     position: static;
     height: auto;
     width: auto;
@@ -408,4 +416,16 @@ footer {
   align-content: center;
   color: #fff;
   font-size: 20px;
+} 
+
+/* animations */
+
+@keyframes adapt-header {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }
