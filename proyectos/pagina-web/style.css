@@ -273,6 +273,9 @@ p {
   display: grid;
   place-content: center;
   border-radius: 5px;
+  animation: aparecer both;
+  animation-timeline: view();
+  animation-range: cover 10% contain 40%;
 }
 
 .portfolio__project:hover {
@@ -432,5 +435,15 @@ footer {
     background-color: #0007;
     color: #fff;
     padding: 0;
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
