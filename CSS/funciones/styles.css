@@ -1,0 +1,25 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.contenedor {
+  display: flex;
+  filter: drop-shadow( 0 0 15px #000);
+}
+
+.box1 {
+  background-color: #aaa;
+  padding: 20px;
+  margin: auto;
+}
+
+.box2 {
+  background-color: #aaa;
+  padding: 40px;
+  margin: auto;
+}
