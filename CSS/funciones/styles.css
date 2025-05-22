@@ -11,16 +11,24 @@ body {
   background-color: #333;
 }
 
-.box {
+.box-imagen {
   border: 3px solid #fff;
   height: 300px;
   width: 300px;
   margin: auto;
-  transform: rotate(20deg);
 }
 
-.box:first-child {
-  transform: skew( 20deg );
+.box-imagen:first-child {
+  transform: skew(20deg);
+}
+
+.box-imagen:nth-child(2) {
+  transform: rotate(0);
+  transition: transform 1s;
+}
+
+.box-imagen:nth-child(2):hover {
+  transform: rotate(90deg);
 }
 
 
