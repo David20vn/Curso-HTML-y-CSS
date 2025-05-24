@@ -7,6 +7,10 @@ body {
   font-family: sans-serif;
 }
 
+section {
+  height: 100vh;;
+}
+
 .filter_transform {
   display: flex;
   flex-direction: column;
@@ -42,7 +46,6 @@ img {
 /*max-min-clamp*/
 
 .max_min_clamp {
-  height: 100vh;
   padding: 120px 0;
 }
 
@@ -60,4 +63,31 @@ img {
 .mmc h1 {
   font-size: 2.3em;
   margin-bottom: 0;
+}
+
+/*variables*/
+
+section:nth-child(3){
+  background-color: #300;
+  padding: 20px;
+}
+.variable {
+  --principal_color: #2f2;
+  color: #fff;
+  width: clamp(700px, 100%, 900px);
+  display: grid;
+  place-content: center;
+  margin: 20px auto;
+  font-size: 20px;
+  padding: 0 40px;
+  border: 2px solid #fff;
+}
+
+.variable:first-child {
+  background-color: var(--principal_color);
+}
+
+.variable:nth-child(2){
+  color: var(--principal_color);
+  border: 2px solid var(--principal_color);
 }
