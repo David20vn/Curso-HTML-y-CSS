@@ -104,4 +104,12 @@ section:nth-child(3){
   height: 80vh;
   overflow: auto;
   scroll-behavior: smooth;
+  scrollbar-color: #48e #111;
+  scrollbar-width: thin;
+}
+
+.scroll-box p::first-letter {
+  initial-letter: 3 2;
+  padding: 20px;
+  font-family: auto;
 }
