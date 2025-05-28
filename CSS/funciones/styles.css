@@ -113,3 +113,10 @@ section:nth-child(3){
   padding: 20px;
   font-family: auto;
 }
+
+/* clip-path */
+
+.img-cp img {
+  max-width: 100%;
+  clip-path: circle(49%);
+}
