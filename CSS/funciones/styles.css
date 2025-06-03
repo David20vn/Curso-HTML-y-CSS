@@ -118,5 +118,5 @@ section:nth-child(3){
 
 .img-cp img {
   max-width: 100%;
-  clip-path: circle(49%);
+  clip-path: circle(50%);
 }
