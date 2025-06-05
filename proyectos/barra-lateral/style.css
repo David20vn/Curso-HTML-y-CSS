@@ -1,7 +1,28 @@
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   font-family: sans-serif;
+  --bg-color: #f53;
+  --sidebar-color: #fff;
+  background-color: var(--bg-color);
+}
+
+.sidebar {
+  background-color: var(--sidebar-color);
+  position: fixed;
+  height: 100dvh;
+  width: clamp(200px, 20vw, 300px);
+  font-size: clamp(1rem, 2.2vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px 0 30px 30px;
+}
+
+.sidebar__form {
+  display: none;
 }
