@@ -7,7 +7,7 @@
 body {
   font-family: sans-serif;
   --dark-color: rgb(248, 58, 20);
-  --bg-color: rgba(248, 58, 20, .7);
+  --bg-color: rgb(241, 121, 97);
   --sidebar-color: #fff;
   background-color: var(--bg-color);
 }
@@ -43,11 +43,35 @@ body {
   display: flex;
   align-items: center;
   color: var(--dark-color);
+  position: relative;
 }
 
 .sidebar__item:hover {
   background-color: var(--bg-color);
   color: var(--sidebar-color);
+  border-radius: 36px 0 0 36px;
+}
+
+.sidebar__item:hover::before,
+.sidebar__item:hover::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  background-color: transparent;
+}
+
+.sidebar__item:hover::before {
+  top: -18px;
+  border-bottom-right-radius: 30px;
+  box-shadow: 4px 4px 0 4px var(--bg-color);
+}
+
+.sidebar__item:hover::after{
+  bottom: -18px;
+  border-top-right-radius: 30px;
+  box-shadow: 4px -4px 0 4px var(--bg-color);
 }
 
 .sidebar__item a {
@@ -57,4 +81,8 @@ body {
 
 .sidebar__item span {
   padding: 12px;
+}
+
+.form__picture img {
+  
 }
