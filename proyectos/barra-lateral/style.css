@@ -20,7 +20,7 @@ body {
   position: fixed;
   height: 100dvh;
   width: clamp(200px, 20vw, 300px);
-  font-size: clamp(.7rem, 2vw, 2.6rem);
+  font-size: clamp(.7rem, 2.3vw, 3rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -78,6 +78,7 @@ body {
 
 .sidebar__item span {
   padding: 12px;
+  font-size: 1.7rem;
 }
 
 .sidebar__picture img {
@@ -116,7 +117,7 @@ body {
 .sidebar__form {
   position: absolute;
   z-index: 10;
-  right: -.5rem;
+  right: -1rem;
 }
 
 input[type="checkbox"]{
@@ -128,7 +129,6 @@ input[type="checkbox"]{
   background-color: var(--bg-color);
   padding: .5rem;
   border-radius: 50%;
-  position: relative;
 }
 
 .sidebar__form label::before, 
@@ -164,4 +164,17 @@ input[type="checkbox"]{
 .sidebar__form input[type="checkbox"]:checked ~ label::after,
 .sidebar__form input[type="checkbox"]:checked ~ label::before {
   display: none;
+}
+
+.sidebar:has(input[type="checkbox"]:checked) {
+  width: fit-content
+}
+
+.sidebar:has(input[type="checkbox"]:checked) :is( .sidebar a, .profile__option ) {
+  display: none;
+}
+
+.sidebar:has(input[type="checkbox"]:checked) picture {
+  width: 7dvw;
+  opacity: 0;
 }
