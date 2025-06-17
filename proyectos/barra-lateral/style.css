@@ -131,6 +131,10 @@ input[type="checkbox"]{
   border-radius: 50%;
 }
 
+.sidebar__form label:nth-child(3) {
+  display: none;
+}
+
 .sidebar__form label::before, 
 .sidebar__form label::after{
   content: '';
@@ -177,4 +181,12 @@ input[type="checkbox"]{
 .sidebar:has(input[type="checkbox"]:checked) picture {
   width: 7dvw;
   opacity: 0;
+}
+
+.sidebar__form input[type="checkbox"]:checked + label {
+  display: none;
+}
+
+.sidebar__form input[type="checkbox"]:checked + label + label {
+  display: block;
 }
