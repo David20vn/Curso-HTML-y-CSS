@@ -20,6 +20,7 @@ body, div, ul, li, a, h1, h2, p {
   background-color: var(--chat-bg-color);
   margin: 50px auto;
   border-radius: 20px;
+  box-shadow: 2px 2px 6px #0004;
 }
 
 .chat__user {
@@ -35,8 +36,12 @@ body, div, ul, li, a, h1, h2, p {
 }
 
 .chat__content {
-  padding: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
 }
+
+/* messages */
 
 .content__message {
   background-color: var(--bg-color);
@@ -45,6 +50,10 @@ body, div, ul, li, a, h1, h2, p {
   padding: 6px;
   border-radius: 9px 9px 9px 0;
   position: relative;
+  max-width: clamp(300px, 70%, 700px);
+  width: fit-content;
+  margin: 8px;
+  z-index: 10;
 }
 
 .content__message::before {
@@ -53,7 +62,21 @@ body, div, ul, li, a, h1, h2, p {
   background-color: var(--bg-color);
   width: 18px;
   height: 18px;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 53%);
+  clip-path: polygon(40% 0%, 0% 100%, 100% 60%);
   bottom: -5px;
   left: -5px;
+  z-index: -1;
+}
+
+.self {
+  background-color: var(--dark-color);
+  margin-left: auto;
+  border-radius: 9px 9px 0 9px;
+}
+
+.self::before {
+  background-color: var(--dark-color);
+  clip-path: polygon(0% 60%, 60% 0%, 100% 100%);
+  left: initial;
+  right: -5px;
 }
