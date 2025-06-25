@@ -3,15 +3,57 @@
 }
 
 body {
-  margin: 0;
-  padding: 0;
   font-family: sans-serif;
   --bg-color: color-mix(in srgb, #f62 70%, #fff);
-  --cb-color: #fff;
+  --chat-bg-color: #fff;
   --dark-color: #f62;
+  background-color: var(--bg-color);
 }
 
-div, ul, li, a, h1, h2 {
+body, div, ul, li, a, h1, h2, p {
   margin: 0;
   padding: 0;
+}
+
+.chat {
+  max-width: clamp( 300px, 75%, 900px );
+  background-color: var(--chat-bg-color);
+  margin: 50px auto;
+  border-radius: 20px;
+}
+
+.chat__user {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid var(--dark-color);
+}
+
+.chat__user img {
+  max-width: 2.5rem;
+  border-radius: 50%;
+  margin: 6px;
+}
+
+.chat__content {
+  padding: 12px;
+}
+
+.content__message {
+  background-color: var(--bg-color);
+  color: var(--chat-bg-color);
+  font-size: .8rem;
+  padding: 6px;
+  border-radius: 9px 9px 9px 0;
+  position: relative;
+}
+
+.content__message::before {
+  content: '';
+  position: absolute;
+  background-color: var(--bg-color);
+  width: 18px;
+  height: 18px;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 53%);
+  bottom: -5px;
+  left: -5px;
 }
