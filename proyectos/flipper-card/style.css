@@ -1,0 +1,50 @@
+*{ 
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  --bg-color: color-mix(in srgb, #f62 70%, #fff);
+  --card-color: #fff;
+  --dark-color: #f62;
+  --text-color: #333;
+  background-color: var(--bg-color);
+}
+
+body, div, ul, li, a, h1, h2, p {
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  max-width: clamp( 200px, 60%, 600px);
+  background-color: var(--card-color);
+  color: var(--text-color);
+  margin: 50px auto;
+  position: relative;
+}
+
+.card__front img {
+  width: 100%;
+}
+
+.front__img {
+  max-height: 200px;
+  overflow: hidden;
+}
+
+.front__data {
+  padding: 12px;
+}
+
+.front__data h2 {
+  margin: 12px 0;
+  font-weight: 200;
+}
+
+.card__back {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
