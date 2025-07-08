@@ -1,0 +1,43 @@
+* {
+  box-sizing: border-box;
+}
+
+body, div, ul, li, a, h1, h2, h3, p {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  --bc: #f96;
+  --dark-color: #f62;
+  
+  background-color: var(--bc);
+  height: 200dvh;
+
+}
+
+header {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+}
+
+img {
+  filter: grayscale();
+  mix-blend-mode: screen;
+  position: fixed;
+  top: 0;
+  animation: aparecer;
+  animation-timeline: scroll();
+}
+
+@keyframes aparecer {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
