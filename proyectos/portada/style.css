@@ -12,8 +12,10 @@ body {
   --bc: #f96;
   --dark-color: #f62;
   
-  background-color: var(--bc);
+  background-image: url(../../imagenes/fondo-smoke.gif);
   height: 200dvh;
+  background-position: center;
+  background-size: cover;
 
 }
 
@@ -28,8 +30,9 @@ img {
   mix-blend-mode: screen;
   position: fixed;
   top: 0;
-  animation: aparecer;
+  animation: aparecer-img;
   animation-timeline: scroll();
+  height: 100%;
   min-height: 80dvh;
 }
 
@@ -39,15 +42,21 @@ img {
   min-height: 100dvh;
   display: flex;
   font-size: clamp( 1rem, 8dvw, 10rem);
-  color: #444;
-  mix-blend-mode: darken;
+  color: #ccc;
+  mix-blend-mode:difference;
+  font-weight: 600;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3vw;
+  animation: aparecer-texto scroll();
 }
 
 .left {
   color: #48e;
 }
 
-@keyframes aparecer {
+@keyframes aparecer-imh {
   0% {
     opacity: 0;
     scale: 0.7;
@@ -58,3 +67,16 @@ img {
     scale: 1;
   }
 }
+
+@keyframes aparecer-texto {
+  0% {
+    scale: 2;
+    opacity: 0;
+  }
+
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
