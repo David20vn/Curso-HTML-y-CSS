@@ -1,0 +1,38 @@
+*{ 
+  box-sizing: border-box;
+}
+
+body {
+  --bc: #fb8;
+  --faq-color: #fff;
+  font-family: sans-serif;
+
+  background-color: var(--bc);
+}
+
+body, div, ul, li, a, h1, h2, p {
+  margin: 0;
+  padding: 0;
+}
+
+.faq {
+  margin: auto;
+  max-width: clamp( 300px, 90%, 900px)
+}
+
+.faq details{
+  background-color: var(--faq-color);
+  margin: 6px;
+  padding: 7px;
+}
+
+.faq summary {
+  font-size: 1.1rem;
+}
+
+.content {
+  margin: 5px 10px 0 10px;
+  padding:  5px 10px;
+  border-top: 1px solid var(--bc);
+  font-size: .9rem;
+}
