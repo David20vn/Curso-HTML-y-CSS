@@ -1,0 +1,527 @@
+<!doctype html>
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Curso: Lenguajes Formales, Gramáticas y Máquinas de Turing</title>
+  <meta name="description" content="Guía didáctica desde cero sobre lenguajes formales, gramáticas y máquinas de Turing. Curso modular, con ejemplos, analogías y ejercicios.">
+  <style>
+    :root{
+      --bg: #f6fbff;
+      --card: #ffffff;
+      --muted: #475569;
+      --accent: #2563eb;
+      --accent-2: #10b981;
+      --soft: #eef6ff;
+      --muted-2:#94a3b8;
+      --shadow: 0 10px 30px rgba(2,6,23,0.06);
+      --glass: rgba(255,255,255,0.6);
+      --radius: 12px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+    }
+
+
+html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial; background:var(--bg); color:#0f172a; -webkit-font-smoothing:antialiased;}
+.wrap{max-width:1150px;margin:24px auto;padding:20px;}
+header{display:flex;gap:18px;align-items:center;margin-bottom:18px;}
+header img{width:64px;height:64px;border-radius:10px;box-shadow:0 6px 18px rgba(37,99,235,0.12);object-fit:cover;}
+h1{font-size:1.9rem;margin:0;color:var(--accent);letter-spacing:-0.5px;}
+p.lead{margin:6px 0 0;color:var(--muted);}
+
+nav.toc{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.chip{background:var(--card);padding:8px 12px;border-radius:999px;border:1px solid #eef4ff;color:var(--accent);font-weight:600;box-shadow:0 6px 18px rgba(37,99,235,0.06);text-decoration:none;}
+.btn{display:inline-block;padding:10px 16px;border-radius:10px;border:0;background:var(--accent);color:white;font-weight:600;text-decoration:none;cursor:pointer;}
+.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;}
+@media (max-width:980px){.grid{grid-template-columns:1fr;}}
+
+.card{background:var(--card);padding:20px;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px;}
+.module-title{display:flex;align-items:center;gap:12px;}
+.module-title h2{margin:0;color:var(--accent);font-size:1.4rem;}
+h3{color:var(--muted);margin:18px 0 10px;}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px;}
+.concept-card{background:white;padding:14px;border-radius:10px;border-top:4px solid var(--accent);box-shadow:0 6px 20px rgba(12,20,40,0.04);}
+
+.example{background:#f8fafc;padding:14px;border-radius:10px;border-left:4px solid var(--accent);margin:14px 0;}
+.example .title{font-weight:700;color:var(--accent);margin-bottom:8px;}
+.note{background:#fff8e6;padding:10px;border-radius:8px;border-left:4px solid #f59e0b;margin:12px 0;color:#6b4b00;}
+.tip{background:#f0fdf4;padding:10px;border-radius:8px;border-left:4px solid var(--accent-2);margin:12px 0;color:#064e3b;}
+
+code, pre{font-family:var(--mono);background:#0f172a0f;padding:3px 6px;border-radius:6px;color:#0b1220;font-size:0.95em;}
+pre {padding:12px;overflow:auto;}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--soft);color:var(--accent);font-weight:700;margin-right:6px;font-size:0.86rem;}
+.muted{color:var(--muted-2);font-size:0.95rem;}
+
+.exercise{border-radius:10px;padding:14px;margin:12px 0;border:1px dashed #e6eefc;background:linear-gradient(180deg,#fff,#fbfdff);}
+.exercise h4{margin:0 0 10px;}
+.solution{display:none;margin-top:10px;padding:12px;border-radius:8px;background:#0f172a06;border-left:4px solid var(--accent);}
+
+footer{margin-top:28px;padding-top:18px;border-top:1px solid #eef6ff;color:var(--muted);text-align:center;font-size:0.95rem;}
+
+/* Sticky aside */
+aside.card{position:sticky;top:22px;height:fit-content;}
+ul.clean{list-style:none;padding:0;margin:0;}
+ul.clean li{padding:8px 0;border-bottom:1px dashed #f1f7ff;color:var(--muted-2);font-size:0.95rem;}
+.small{font-size:0.92rem;color:var(--muted);}
+
+/* Collapsible anchors */
+.anchor{display:inline-block;margin-left:8px;color:var(--accent);text-decoration:none;font-weight:700;font-size:0.9rem;}
+.card-hero{display:flex;gap:14px;align-items:flex-start;}
+.logo-sq{width:78px;height:78px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#60a5fa);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:28px;box-shadow:0 8px 30px rgba(37,99,235,0.12);}
+.ks{font-weight:700;color:var(--accent);}
+
+/* Table style */
+table{width:100%;border-collapse:collapse;margin-top:12px;}
+table th, table td{padding:10px;border:1px solid #eef6ff;text-align:left;}
+table th{background:#fbfdff;color:var(--accent);font-weight:700;}
+.code-block{background:#0f172a08;border-radius:8px;padding:10px;margin:10px 0;font-family:var(--mono);}
+
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo-sq">AG</div>
+      <div>
+        <h1>Curso — Lenguajes Formales, Gramáticas y Máquinas de Turing</h1>
+        <p class="lead">Guía extensa y didáctica, pensada para estudiantes de secundaria y los primeros semestres — explicaciones claras, analogías, ejemplos y ejercicios con soluciones.</p>
+        <nav class="toc" aria-label="Índice rápido">
+          <a class="chip" href="#mod1">Módulo 1: Conceptos básicos</a>
+          <a class="chip" href="#mod2">Módulo 2: Gramáticas</a>
+          <a class="chip" href="#mod3">Módulo 3: Jerarquía Chomsky</a>
+          <a class="chip" href="#mod4">Módulo 4: Autómatas</a>
+          <a class="chip" href="#mod5">Módulo 5: Máquinas de Turing</a>
+          <a class="chip" href="#mod6">Módulo 6: Aplicaciones & Ejercicios</a>
+        </nav>
+      </div>
+    </header>
+
+```
+<div class="grid">
+  <main>
+    <!-- MODULE 1 -->
+    <section id="mod1" class="card">
+      <div class="module-title">
+        <h2>Módulo 1 — Conceptos básicos</h2>
+        <span class="badge">Inicio</span>
+      </div>
+
+      <p class="small">Este módulo presenta las piezas más simples: símbolos, cadenas y alfabetos. Antes de avanzar, asegúrate de sentirte cómodo con estos conceptos — son la base de todo lo demás.</p>
+
+      <h3>1. Introducción intuitiva</h3>
+      <p>Imagina que quieres construir palabras con fichas. Cada ficha es un <strong>símbolo</strong>. Con varias fichas ordenadas, formas una <strong>cadena</strong>. El conjunto de fichas permitidas es el <strong>alfabeto</strong>.</p>
+
+      <h3>2. Definiciones formales (pero amables)</h3>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <h4>¿Qué es un símbolo?</h4>
+          <p>Un símbolo es un elemento indivisible. Ej: <code>a</code>, <code>b</code>, <code>0</code>, <code>1</code>.</p>
+        </div>
+        <div class="concept-card">
+          <h4>¿Qué es un alfabeto (Σ)?</h4>
+          <p>Un conjunto finito de símbolos. Ejemplos: <code>Σ = {0,1}</code> o <code>Σ = {a,b,c}</code>.</p>
+        </div>
+        <div class="concept-card">
+          <h4>¿Qué es una cadena?</h4>
+          <p>Una secuencia finita de símbolos de Σ. Ej: <code>"abba"</code>, <code>"101"</code>.</p>
+        </div>
+      </div>
+
+      <h3>3. Operaciones sobre cadenas</h3>
+      <div class="example">
+        <div class="title">Ejemplo: Operaciones</div>
+        <p><strong>Longitud:</strong> |"abc"| = 3. <br>
+           <strong>Concatenación:</strong> "ab" + "c" = "abc". <br>
+           <strong>Reverso:</strong> rev("101") = "101", rev("abc") = "cba".</p>
+      </div>
+
+      <h3>4. Lenguajes</h3>
+      <p>Un <strong>lenguaje</strong> es cualquier conjunto (posible) de cadenas sobre un alfabeto Σ. Por ejemplo, si Σ = {a,b}:</p>
+      <ul>
+        <li>L1 = { "a", "b", "ab" }</li>
+        <li>L2 = { aⁿbⁿ | n ≥ 0 } = { "", "ab", "aabb", "aaabbb", ... }</li>
+      </ul>
+
+      <h3>5. Analogías</h3>
+      <p><strong>Alfabeto:</strong> piezas de LEGO; <strong>Cadena:</strong> modelo construido; <strong>Lenguaje:</strong> colección de modelos permitidos por un conjunto de reglas.</p>
+
+      <h3>6. Usos</h3>
+      <p>Validación de entradas, patrones (expresiones regulares), principio para diseñar parsers y entender cómo funcionan los compiladores.</p>
+
+      <h3>7. Ejercicios</h3>
+      <div class="exercise">
+        <h4>Ejercicio 1</h4>
+        <p>Encuentra la longitud y el reverso de las siguientes cadenas:</p>
+        <ul>
+          <li>a) "0101"</li>
+          <li>b) "" (cadena vacía)</li>
+          <li>c) "aaaab"</li>
+        </ul>
+        <button class="btn" onclick="toggleSolution('s1')">Mostrar solución / pista</button>
+        <div id="s1" class="solution"><strong>Solución:</strong><br>a) longitud 4, reverso "1010".<br>b) longitud 0, reverso "".<br>c) longitud 5, reverso "baaaa".</div>
+      </div>
+
+    </section>
+
+    <!-- MODULE 2 -->
+    <section id="mod2" class="card">
+      <div class="module-title">
+        <h2>Módulo 2 — Gramáticas formales</h2>
+        <span class="badge">Gramáticas</span>
+      </div>
+
+      <p class="small">Las gramáticas son el conjunto de reglas que nos dicen cómo generar las cadenas válidas de un lenguaje. Piensa en ellas como recetas o engramas que transforman símbolos hasta obtener cadenas terminales.</p>
+
+      <h3>1. Introducción intuitiva</h3>
+      <p>Una gramática nos dice cómo reemplazar símbolos incompletos (no terminales) por otros símbolos hasta que sólo queden símbolos finales (terminales). Es una receta paso a paso.</p>
+
+      <h3>2. Definición formal</h3>
+      <p>Una gramática <code>G</code> se define como la cuádrupla <code>G = (N, Σ, P, S)</code> donde:</p>
+      <ul>
+        <li><strong>N</strong> = conjunto de no terminales (símbolos que se expanden).</li>
+        <li><strong>Σ</strong> = conjunto de terminales (símbolos finales).</li>
+        <li><strong>P</strong> = conjunto de producciones o reglas (A → α).</li>
+        <li><strong>S</strong> = símbolo inicial (S ∈ N).</li>
+      </ul>
+
+      <h3>3. Derivaciones y árboles</h3>
+      <p>La <strong>derivación</strong> es aplicar reglas paso a paso. <strong>Árbol de derivación</strong> es una representación visual donde la raíz es S y las hojas son terminales.</p>
+
+      <div class="example">
+        <div class="title">Ejemplo: Gramática simple</div>
+        <p>G = (N={S}, Σ={a,b}, P, S) con reglas:</p>
+        <pre class="code-block">S → a S b
+```
+
+S → ab</pre> <p>Derivaciones: S ⇒ a S b ⇒ a ab b ⇒ aabb</p> </div>
+
+```
+      <h3>4. Analogías</h3>
+      <p>Los no terminales son como "plantillas" con huecos; las reglas son como instrucciones para rellenar esos huecos.</p>
+
+      <h3>5. Usos</h3>
+      <p>Las gramáticas se usan en:</p>
+      <ul>
+        <li>Definición de la sintaxis de lenguajes de programación.</li>
+        <li>Analizadores sintácticos (parsers).</li>
+        <li>Generación de oraciones en procesamiento de lenguaje natural (preguntas/respuestas simplificadas).</li>
+      </ul>
+
+      <h3>6. Datos curiosos</h3>
+      <p>La formalización moderna de gramáticas proviene del trabajo de Noam Chomsky (lingüista), y se conectó después con la teoría de autómatas y la informática.</p>
+
+      <h3>7. Ejercicios</h3>
+      <div class="exercise">
+        <h4>Ejercicio 2</h4>
+        <p>Define una gramática que genere cadenas del tipo <code>aⁿb</code> (con n ≥ 1).</p>
+        <button class="btn" onclick="toggleSolution('s2')">Mostrar solución / pista</button>
+        <div id="s2" class="solution"><strong>Pista:</strong> Necesitas generar una o más <code>a</code> y luego una <code>b</code>.<br><strong>Solución:</strong> <pre class="code-block">S → aS | ab</pre></div>
+      </div>
+
+    </section>
+
+    <!-- MODULE 3 -->
+    <section id="mod3" class="card">
+      <div class="module-title">
+        <h2>Módulo 3 — Jerarquía de Chomsky</h2>
+        <span class="badge">Clasificación</span>
+      </div>
+
+      <p class="small">La jerarquía de Chomsky organiza las gramáticas por su poder expresivo. De menos potente a más potente: Tipo 3 → Tipo 2 → Tipo 1 → Tipo 0.</p>
+
+      <h3>Tipo 3 — Gramáticas Regulares</h3>
+      <p><strong>Intuitivo:</strong> Reglas muy sencillas; corresponde a expresiones regulares y autómatas finitos.</p>
+      <p><strong>Formal:</strong> Las producciones son del tipo <code>A → aB</code> o <code>A → a</code> (posiblemente <code>A → ε</code> en algunas definiciones).</p>
+      <div class="example">
+        <div class="title">Ejemplo Tipo 3</div>
+        <pre class="code-block">S → 0S | 1S | ε</pre>
+        <p>Genera todas las cadenas binarias (Σ = {0,1}).</p>
+      </div>
+      <p class="small"><strong>Autómata relacionado:</strong> Autómata finito (determinista o no determinista).</p>
+
+      <h3>Tipo 2 — Gramáticas Independientes del Contexto (GIC)</h3>
+      <p><strong>Intuitivo:</strong> Reglas con un solo no terminal en la izquierda; útiles para lenguajes con estructura jerárquica (ej. paréntesis balanceados).</p>
+      <p><strong>Formal:</strong> Producciones del tipo <code>A → α</code> con A ∈ N y α ∈ (N ∪ Σ)\*.</p>
+      <div class="example">
+        <div class="title">Ejemplo Tipo 2</div>
+        <pre class="code-block">S → (S)S | ε</pre>
+        <p>Genera paréntesis balanceados.</p>
+      </div>
+      <p class="small"><strong>Autómata relacionado:</strong> Autómata con pila (pushdown automaton).</p>
+
+      <h3>Tipo 1 — Gramáticas Dependientes del Contexto (GDC)</h3>
+      <p><strong>Intuitivo:</strong> Reglas que pueden depender del contexto donde aparece un símbolo.</p>
+      <p><strong>Formal:</strong> Producciones del tipo <code>αAβ → αγβ</code>, con la regla de que la longitud del lado derecho no sea menor (en la definición original restringida).</p>
+      <div class="example">
+        <div class="title">Ejemplo Tipo 1 (simplificado)</div>
+        <pre class="code-block">aA → aa</pre>
+        <p>La regla solo se aplica cuando <code>A</code> aparece precedido por <code>a</code>.</p>
+      </div>
+
+      <h3>Tipo 0 — Gramáticas Irrestrictas</h3>
+      <p><strong>Intuitivo:</strong> Sin restricciones: cualquier producción <code>α → β</code> con α no vacío. Tienen el máximo poder y son equivalentes en poder a las Máquinas de Turing.</p>
+
+      <h3>Tabla comparativa</h3>
+      <table>
+        <thead>
+          <tr><th>Tipo</th><th>Nombre</th><th>Forma de producciones</th><th>Autómata</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>3</td><td>Regulares</td><td>A → aB | a | ε</td><td>Autómata finito</td></tr>
+          <tr><td>2</td><td>Independientes del contexto</td><td>A → α</td><td>Autómata con pila</td></tr>
+          <tr><td>1</td><td>Dependientes del contexto</td><td>αAβ → αγβ</td><td>Máquinas lineales acotadas (LBA)</td></tr>
+          <tr><td>0</td><td>Irrestrictas</td><td>α → β</td><td>Máquina de Turing</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Ejercicios</h3>
+      <div class="exercise">
+        <h4>Ejercicio 3</h4>
+        <p>Clasifica las siguientes gramáticas en la jerarquía (3, 2, 1, 0):</p>
+        <ol>
+          <li><pre class="code-block">S → aS | b</pre></li>
+          <li><pre class="code-block">A B → BA</pre></li>
+          <li><pre class="code-block">S → aSb | ε</pre></li>
+        </ol>
+        <button class="btn" onclick="toggleSolution('s3')">Mostrar soluciones</button>
+        <div id="s3" class="solution"><strong>Solución:</strong><br>1 → Tipo 3 (regulares).<br>2 → Tipo 1 o 0 (depende de si se permite el espacio como parte de la notación; es dependiente del contexto).<br>3 → Tipo 2 (GIC).</div>
+      </div>
+
+    </section>
+
+    <!-- MODULE 4 -->
+    <section id="mod4" class="card">
+      <div class="module-title">
+        <h2>Módulo 4 — Autómatas básicos (ideas sencillas)</h2>
+        <span class="badge">Máquinas simples</span>
+      </div>
+
+      <p class="small">Los autómatas son modelos que "leen" cadenas y deciden si pertenecen o no a un lenguaje. Vamos a ver los más importantes a nivel conceptual.</p>
+
+      <h3>Autómata Finito Determinista (AFD)</h3>
+      <p>Un AFD tiene:</p>
+      <ul>
+        <li>Un conjunto finito de estados Q.</li>
+        <li>Un estado inicial q₀.</li>
+        <li>Un conjunto de estados de aceptación F.</li>
+        <li>Una función de transición δ: Q × Σ → Q.</li>
+      </ul>
+      <p><strong>Idea:</strong> Para cada símbolo leído hay exactamente una transición posible — el camino está determinado.</p>
+
+      <div class="example">
+        <div class="title">Ejemplo AFD</div>
+        <p>AFD que acepta cadenas binarias que terminan en <code>1</code>:</p>
+        <pre class="code-block">Estados: {q0, q1}
+```
+
+q0 = inicial
+q1 = estado final
+Transiciones:
+q0 -0-> q0
+q0 -1-> q1
+q1 -0-> q0
+q1 -1-> q1 </pre> <p>La máquina termina en <code>q1</code> sólo si la última letra es 1.</p> </div>
+
+```
+      <h3>Autómata Finito No Determinista (AFN)</h3>
+      <p>Un AFN puede tener múltiples transiciones posibles para el mismo símbolo (o transiciones ε). Si <em>algún</em> camino conduce a un estado de aceptación, la cadena es aceptada.</p>
+
+      <h3>Autómata con Pila (AP)</h3>
+      <p>Un AP es como un autómata finito con una pila (estructura LIFO). Permite guardar información que luego se puede usar — esencial para reconocer <code>aⁿbⁿ</code>.</p>
+
+      <h3>Relación con gramáticas</h3>
+      <p class="muted">Resumen rápido:</p>
+      <ul>
+        <li>Gramáticas regulares ↔ Autómatas finitos</li>
+        <li>GIC ↔ Autómatas con pila</li>
+        <li>Gramáticas irrestrictas ↔ Máquina de Turing</li>
+      </ul>
+
+      <div class="tip">Consejo: Los autómatas son útiles para pensar en procesos paso a paso. Dibuja estados y flechas como si fuera un mapa de rutas.</div>
+
+    </section>
+
+    <!-- MODULE 5 -->
+    <section id="mod5" class="card">
+      <div class="module-title">
+        <h2>Módulo 5 — Máquinas de Turing</h2>
+        <span class="badge">Núcleo de la computación</span>
+      </div>
+
+      <p class="small">La Máquina de Turing (MT) es el modelo matemático que formaliza la idea de algoritmo. Cualquier cálculo que consideres "algorítmico" puede representarse — en principio — con una MT.</p>
+
+      <h3>1. Explicación intuitiva</h3>
+      <p>Puedes imaginar la MT como una persona que tiene una <strong>cinta infinita</strong> dividida en casillas: en cada casilla hay un símbolo. La persona (el cabezal) puede leer, escribir y moverse a la izquierda o a la derecha. Además tiene una libreta (los estados) que le dice qué hacer según lo que lea.</p>
+
+      <h3>2. Componentes</h3>
+      <ul>
+        <li><strong>Cinta</strong>: secuencia infinita de celdas, cada una con un símbolo de un alfabeto de cinta <code>Γ</code>.</li>
+        <li><strong>Cabezal</strong>: posición que lee y escribe símbolos.</li>
+        <li><strong>Estados</strong>: conjunto finito Q con <code>q₀</code> (inicial), <code>q_accept</code> y <code>q_reject</code>.</li>
+        <li><strong>Función de transición</strong> δ: Q × Γ → Q × Γ × {L,R} (lee, escribe, mueve).</li>
+      </ul>
+
+      <h3>3. Definición formal (simple)</h3>
+      <p>Una máquina de Turing:<br>
+      <code>M = (Q, Σ, Γ, δ, q₀, q_accept, q_reject)</code>.</p>
+
+      <h3>4. Ejemplos simples</h3>
+      <div class="example">
+        <div class="title">Ejemplo: Incrementar un número binario (+1)</div>
+        <p><strong>Idea</strong>: Empezamos por el bit menos significativo (derecha). Si encontramos 1 → lo cambiamos por 0 y seguimos; si encontramos 0 → lo cambiamos por 1 y terminamos. Si llegamos al principio y todo eran 1s, añadimos un 1 al inicio.</p>
+        <pre class="code-block">Transiciones (esquema):
+```
+
+q0: mover a la derecha hasta encontrar blanco (marca del final)
+q1: moverse a la izquierda; si ve 1 → escribe 0, sigue a q1; si ve 0 → escribe 1 y va a q_accept </pre> </div>
+
+```
+      <div class="example">
+        <div class="title">Ejemplo: Reconocer cadenas del tipo "1^n 0 1^n"</div>
+        <p>Las MT pueden reconocer patrones simples: copiar, comparar longitudes, etc. Se suelen usar marcas temporales en la cinta para marcar símbolos ya procesados.</p>
+      </div>
+
+      <h3>5. Algoritmo en este modelo</h3>
+      <p>Un algoritmo se describe con estados y transiciones de la MT. Si existe una MT que decide (acepta o rechaza) una propiedad, decimos que es <strong>decidable</strong>.</p>
+
+      <h3>6. Datos curiosos sobre Alan Turing</h3>
+      <ul>
+        <li>Propuso la máquina en 1936 (artículo: "On Computable Numbers...").</li>
+        <li>Su máquina puso la base teórica para computación moderna.</li>
+        <li>También trabajó quebrando códigos durante la Segunda Guerra Mundial.</li>
+      </ul>
+
+      <h3>7. Mini-ejercicio</h3>
+      <div class="exercise">
+        <h4>Ejercicio 4</h4>
+        <p>Describe en palabras (no en formalidad) los pasos de una MT que decide si una cadena binaria tiene un número par de unos.</p>
+        <button class="btn" onclick="toggleSolution('s4')">Mostrar solución / pista</button>
+        <div id="s4" class="solution"><strong>Pista:</strong> Lleva un estado que represente "he visto un número par de unos" y otro "impar". Cada vez que lees un 1 cambias entre esos estados; al final, acepta si estás en "par".</div>
+      </div>
+
+    </section>
+
+    <!-- MODULE 6 -->
+    <section id="mod6" class="card">
+      <div class="module-title">
+        <h2>Módulo 6 — Aplicaciones y ejercicios finales</h2>
+        <span class="badge">Práctica</span>
+      </div>
+
+      <p class="small">Aquí juntamos aplicaciones reales y ejercicios clásicos para practicar lo aprendido.</p>
+
+      <h3>Aplicaciones reales de gramáticas</h3>
+      <ul>
+        <li><strong>Compiladores:</strong> las gramáticas describen la sintaxis de un lenguaje de programación (ej. BNF, EBNF).</li>
+        <li><strong>Validación de datos:</strong> expresiones regulares y autómatas para formular validaciones eficientes.</li>
+        <li><strong>Procesamiento de lenguaje natural:</strong> gramáticas formales simplificadas ayudan a modelar estructuras de oraciones.</li>
+        <li><strong>Diseño de protocolos:</strong> autómatas modelan estados en protocolos de red.</li>
+      </ul>
+
+      <h3>Ejercicios clásicos</h3>
+
+      <div class="exercise">
+        <h4>Ejercicio A — Paréntesis balanceados</h4>
+        <p>Define una gramática que genere todas las cadenas de paréntesis balanceados.</p>
+        <button class="btn" onclick="toggleSolution('sa')">Ver solución</button>
+        <div id="sa" class="solution"><strong>Solución:</strong><pre class="code-block">S → (S)S | ε</pre>Explicación: La producción genera una pareja (S) y luego puede seguir con más S a la derecha.</div>
+      </div>
+
+      <div class="exercise">
+        <h4>Ejercicio B — Lenguaje <code>aⁿbⁿ</code></h4>
+        <p>Diseña una gramática que genere el lenguaje <code>{ aⁿ bⁿ | n ≥ 0 }</code>.</p>
+        <button class="btn" onclick="toggleSolution('sb')">Ver solución</button>
+        <div id="sb" class="solution"><strong>Solución:</strong><pre class="code-block">S → a S b | ε</pre></div>
+      </div>
+
+      <div class="exercise">
+        <h4>Ejercicio C — Máquina de Turing sencilla</h4>
+        <p>Escribe los pasos en palabras de una MT que invierta una cadena de símbolos (por ejemplo, transforma <code>abc</code> → <code>cba</code>), suponiendo que hay una región de cinta extra disponible para construcción.</p>
+        <button class="btn" onclick="toggleSolution('sc')">Mostrar pista</button>
+        <div id="sc" class="solution"><strong>Pista:</strong> Copia un símbolo a la derecha marcándolo; muévete al final; reconstruye los símbolos en orden inverso; borra marcas temporales.</div>
+      </div>
+
+      <h3>Dos ejemplos de máquinas de Turing sencillas (esquema)</h3>
+      <div class="example">
+        <div class="title">MT 1 — Paridad de unos</div>
+        <p>Estados: <code>q_even</code> (inicial), <code>q_odd</code>, <code>q_accept</code>, <code>q_reject</code>.</p>
+        <p>Idea: Leer la cinta de izquierda a derecha. Si lees 1 cambias entre <code>q_even</code> y <code>q_odd</code>. Al final, aceptas si estás en <code>q_even</code>.</p>
+      </div>
+
+      <div class="example">
+        <div class="title">MT 2 — Incrementar binario (resumen)</div>
+        <p>1. Ir a la derecha hasta blanco (fin de número).<br>2. Mover izquierda: si ves 1 → escribe 0 y continúa; si ves 0 → escribe 1 y termina aceptando. Si no hay 0 (toda la cadena era 1s) → escribe 1 al inicio y rellena ceros.</p>
+      </div>
+
+      <h3>Recapitulación y siguiente pasos</h3>
+      <p class="muted">Si ya entiendes estos módulos, puedes avanzar a: <strong>construir autómatas concretos, implementar un parser simple (LR o LL), o simular máquinas de Turing en código</strong>. También es buen ejercicio transformar gramáticas entre formas normales (por ejemplo, forma normal de Chomsky) y diseñar autómatas que reconozcan lenguajes regulares concretos.</p>
+
+    </section>
+
+    <footer>
+      <p>Guía creada para uso educativo. ¿Quieres que genere una versión imprimible (PDF) o un simulador interactivo para estos ejemplos?</p>
+    </footer>
+  </main>
+
+  <aside>
+    <aside class="card">
+      <h3>Índice y ayudas rápidas</h3>
+      <ul class="clean">
+        <li><a href="#mod1">Módulo 1 — Conceptos básicos</a></li>
+        <li><a href="#mod2">Módulo 2 — Gramáticas</a></li>
+        <li><a href="#mod3">Módulo 3 — Jerarquía</a></li>
+        <li><a href="#mod4">Módulo 4 — Autómatas</a></li>
+        <li><a href="#mod5">Módulo 5 — Máquinas de Turing</a></li>
+        <li><a href="#mod6">Módulo 6 — Aplicaciones & Ejercicios</a></li>
+      </ul>
+
+      <h4 style="margin-top:12px;">Notas visuales sugeridas</h4>
+      <ul class="small">
+        <li>Usar tarjetas para cada concepto (ya incluido).</li>
+        <li>Resaltar ejemplos con borde de color y etiqueta "Ejemplo".</li>
+        <li>Agregar animaciones ligeras al mostrar soluciones (fade in).</li>
+        <li>Colocar diagramas SVG para autómatas en cada sección práctica.</li>
+      </ul>
+
+      <h4 style="margin-top:12px;">Atajos</h4>
+      <p class="muted small">Presiona los botones "Mostrar solución" para ver pistas/soluciones. Puedes convertir pre en bloque de código para copiar fácilmente.</p>
+    </aside>
+
+    <aside class="card" style="margin-top:14px;">
+      <h3>Glosario rápido</h3>
+      <p><strong>Símbolo:</strong> elemento básico. <br>
+         <strong>Cadena:</strong> secuencia de símbolos. <br>
+         <strong>Alfabeto:</strong> conjunto de símbolos. <br>
+         <strong>Gramática:</strong> conjunto de reglas. <br>
+         <strong>Autómata:</strong> máquina abstracta.</p>
+    </aside>
+  </aside>
+</div>
+```
+
+  </div>
+
+  <script>
+    // Toggle solution boxes
+    function toggleSolution(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+      if(el.style.display === 'block'){
+        el.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+    }
+
+    // Smooth anchor scrolling for in-page links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', function(e){
+        const targetId = this.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth', block:'start'}); }
+      });
+    });
+  </script>
+
+</body>
+</html>

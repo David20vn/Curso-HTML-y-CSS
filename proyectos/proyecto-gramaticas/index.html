@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AutoGram — Simulador Didáctico (GIC / GDC / Máquina de Turing)</title>
+<style>
+  :root{--bg:#f6fbff;--card:#ffffff;--muted:#475569;--accent:#2563eb;--accent-2:#10b981;--soft:#eef6ff;--warning:#ffedd5}
+  html,body{height:100%;margin:0;background:var(--bg);font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;color:#0f172a}
+  .wrap{max-width:1150px;margin:20px auto;padding:18px}
+  header{display:flex;gap:18px;align-items:center}
+  header img{width:64px;height:64px;border-radius:8px}
+  h1{font-size:1.4rem;margin:0}
+  p.lead{margin:4px 0 0;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:18px;margin-top:18px}
+  aside.card,.card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 8px 24px rgba(12,20,40,0.06)}
+  label{display:block;font-weight:600;margin-top:10px}
+  textarea,input,select{width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid #e6eef8;font-size:0.95rem}
+  .btn{display:inline-block;padding:10px 12px;border-radius:10px;border:0;background:var(--accent);color:white;font-weight:600;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--accent);border:1px solid #c7d2fe}
+  .btn.warn{background:#ef4444}
+  .controls .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .hint{font-size:0.9rem;color:var(--muted);margin-top:8px;background:linear-gradient(90deg,#fff,#fbfdff);padding:8px;border-radius:8px}
+  .panel{display:flex;flex-direction:column;gap:14px}
+  .panel .section{background:linear-gradient(180deg,#ffffff,#fbfdff);padding:14px;border-radius:10px;border:1px solid #eef6ff}
+  .tuple{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:#f1f5f9;padding:6px 8px;border-radius:8px;border:1px solid #e6eef8;font-size:0.9rem}
+  .steps{min-height:140px;white-space:pre-wrap;font-size:0.95rem;background:#0f172a;color:#e6eef8;padding:12px;border-radius:8px}
+  .visual{display:flex;gap:10px;align-items:center}
+  .big{font-size:1.05rem}
+  .videoWrap{background:#000;border-radius:8px;height:200px;display:flex;align-items:center;justify-content:center;color:#fff}
+  .tape{display:flex;gap:4px;align-items:center;overflow:auto;padding:6px;border-radius:8px;background:#f8fafc;border:1px solid #eef6ff}
+  .cell{min-width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid #dbeafe;background:white;font-weight:600}
+  .cell.head{background:#e0f2fe;border-color:#60a5fa}
+  .controlsSmall{display:flex;gap:8px;margin-top:8px}
+  .success{background:#dcfce7;color:#166534;padding:10px;border-radius:8px;margin-top:10px;border:1px solid #bbf7d0}
+  .error{background:#fecaca;color:#991b1b;padding:10px;border-radius:8px;margin-top:10px;border:1px solid #fca5a5}
+  .info{background:#dbeafe;color:#1e40af;padding:10px;border-radius:8px;margin-top:10px;border:1px solid#93c5fd}
+  .warning{background:#fef3c7;color:#92400e;padding:10px;border-radius:8px;margin-top:10px;border:1px solid#fcd34d}
+  .tutorial{background:#f8fafc;padding:10px;border-radius:8px;border:1px solid #eef6ff;margin-top:10px}
+  @media(max-width:980px){.grid{grid-template-columns:1fr}.controls{position:static}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect rx='10' width='64' height='64' fill='%232563eb'/><text x='50%' y='55%' font-size='30' text-anchor='middle' fill='white' font-family='Arial'>AG</text></svg>" alt="logo">
+    <div>
+      <h1>AutoGram — Simulador didáctico</h1>
+      <p class="lead">GIC, GDC y Máquina de Turing — interfaz educativa para todo público</p>
+    </div>
+
+    <a href="educativa.html" class="btn" style="
+    display:inline-block;
+    padding:10px 14px;
+    margin-left: 10%;
+    border-radius:10px;
+    text-decoration:none;
+    background:var(--accent);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    text-align:center;
+    ">
+    Acceder a la página educativa
+  </a>
+
+  </header>
+
+  <div class="grid">
+    <aside class="card controls">
+      <h2>Selecciona módulo</h2>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" id="tabGIC">GIC 📘</button>
+        <button class="btn ghost" id="tabGDC">GDC 📗</button>
+        <button class="btn ghost" id="tabTUR">Máquina 🤖</button>
+      </div>
+
+      <div id="commonHelp" class="hint">Elige un módulo. Carga un ejemplo o escribe tu propia gramática/maquina. Usamos explicaciones paso a paso y analogías fáciles.</div>
+
+      <label for="examples">Ejemplos rápidos</label>
+      <select id="examples">
+        <option value="">— seleccionar ejemplo —</option>
+        <optgroup label="GIC - Gramáticas Independientes" id="gicExamples">
+          <option value="gic_par">Balance de paréntesis (S -> (S)S | eps)</option>
+          <option value="gic_anbn">Lenguaje a^n b^n (S -> a S b | eps)</option>
+          <option value="gic_arit">Aritmética simple (E -> E+E | (E) | n)</option>
+        </optgroup>
+        <optgroup label="GDC - Gramáticas Dependientes" id="gdcExamples">
+          <option value="gdc_dup">Duplicación de símbolos (a -> aa en contexto)</option>
+          <option value="gdc_order">Ordenamiento por contexto (ej. cambiar CB -> BC)</option>
+          <option value="gdc_ancn">a^n b^n c^n (ejemplo dependiente)</option>
+        </optgroup>
+        <optgroup label="Turing - Máquina de Turing" id="turingExamples">
+          <option value="t_inv">Invertir bits (0<->1)</option>
+          <option value="t_pal">Palíndromo binario (reconocimiento)</option>
+          <option value="t_sum">Sumador simple 1-bit con acarreo</option>
+        </optgroup>
+      </select>
+
+      <label for="grammarInput">✏ Escribe tus reglas (una por línea) / Transiciones</label>
+      <textarea id="grammarInput" rows="6" placeholder="Para GIC/GDC: una regla por línea. Usa 'eps' para vacío.\nEjemplo GIC:\nS -> a S b | eps\nEjemplo GDC:\naA -> aa"></textarea>
+      <div class="row">
+        <button id="loadGrammar" class="btn">Cargar gramática</button>
+        <button id="clearGrammar" class="btn ghost">Limpiar</button>
+      </div>
+      <div class="hint" id="tupleHint">Al cargar, mostraremos los conjuntos (N, T, P, S) y validaremos reglas.</div>
+
+      <label for="inputString">🧪 Prueba una cadena</label>
+      <input id="inputString" placeholder="Ejemplo: aabb o eps (vacío)" />
+      <div class="row">
+        <button id="startAnalysis" class="btn">Iniciar análisis</button>
+        <button id="autoRun" class="btn ghost">Ejecutar automáticamente</button>
+        <button id="nextStep" class="btn ghost">Siguiente paso</button>
+        <button id="resetBtn" class="btn warn">Reiniciar</button>
+      </div>
+
+      <label class="small">Accesibilidad</label>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button id="toggleNarration" class="btn ghost">Narración oral (TTS)</button>
+        <button id="bigText" class="btn ghost">Texto grande</button>
+      </div>
+
+    </aside>
+
+    <main class="panel">
+      <section class="section">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="big">Resumen del módulo</div>
+            <div class="small" id="moduleDesc">Selecciona un módulo para ver su explicación ampliada.</div>
+          </div>
+          <div style="text-align:right">
+            <div class="small">Estado:</div>
+            <div id="status" class="chip" style="background:#ecfeff;border:1px solid #c7f9f7;color:#065f46">Listo</div>
+          </div>
+        </div>
+
+        <hr style="margin:12px 0">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+          <div>
+            <div class="small">Símbolo inicial</div>
+            <div id="startSymbol" class="chip">S</div>
+          </div>
+          <div>
+            <div class="small">No terminales (N)</div>
+            <div id="nonterminals" class="tuple"></div>
+          </div>
+          <div>
+            <div class="small">Terminales (T)</div>
+            <div id="terminals" class="tuple"></div>
+          </div>
+        </div>
+
+        <div id="moduleTutorial" class="tutorial" style="display:none">
+          <!-- Tutorial dinámico por módulo -->
+        </div>
+      </section>
+
+      <section class="section">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="big">Paso a paso</div>
+          <div class="small">Explicación en lenguaje sencillo — sin tecnicismos</div>
+        </div>
+        <div style="margin-top:10px" class="visual">
+          <div style="flex:1">
+            <div class="steps" id="stepBox">Aquí aparecerán los pasos. Presiona "Iniciar análisis" para comenzar.</div>
+            <div id="resultMessage"></div>
+          </div>
+          <div style="width:300px">
+            <div class="small">Tupla generada</div>
+            <pre id="tupleBox" style="background:#f8fafc;padding:10px;border-radius:8px;border:1px solid #eef6ff">(N, T, P, S)</pre>
+            <div style="margin-top:8px">
+              <button id="showDerivation" class="btn ghost">Mostrar derivación completa</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="advancedSection" style="display:none">
+        <div class="big">Máquina de Turing</div>
+        <p class="small">Simulación interactiva de Máquina de Turing.</p>
+
+        <div id="turingArea" style="margin-top:12px">
+          <h3>Simulación de Máquina de Turing</h3>
+          <p class="small">Formato de transición (una por línea): <code>q0,1 -> q1,0,R</code> (estado, símbolo leído -> nuevoEstado, símboloEscrito, movimiento L/R). Usa '_' para blanco.</p>
+          <label>Transiciones (una por línea)</label>
+          <textarea id="turingRules" rows="6" placeholder="Ejemplo:\nq0,0 -> q0,0,R\nq0,1 -> q0,1,R\nq0,_ -> q1,_,L"></textarea>
+          <label>Cinta inicial</label>
+          <input id="tapeInput" placeholder="Ejemplo: 10101" />
+          <div style="margin-top:8px" class="controlsSmall">
+            <button id="turingInit" class="btn">Inicializar Máquina</button>
+            <button id="turingStep" class="btn ghost">Paso</button>
+            <button id="turingRun" class="btn ghost">Ejecutar</button>
+            <button id="turingReset" class="btn warn">Reset Máquina</button>
+          </div>
+          <div style="margin-top:10px">
+            <div class="tape" id="tapeBox"></div>
+            <div class="small" id="turingState">Estado: -</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <h3>Mini tutorial Máquina de Turing</h3>
+          <div class="tutorial">
+            <strong>¿Qué hace cada elemento?</strong>
+            <ul>
+              <li><strong>Cinta:</strong> memoria infinita (a ambos lados) representada por celdas.</li>
+              <li><strong>Cabezal:</strong> lee/escribe una celda y se mueve a la izquierda (L) o derecha (R).</li>
+              <li><strong>Transiciones:</strong> le dicen a la máquina qué escribir, a qué estado ir y cómo moverse según lo que lea.</li>
+            </ul>
+            <strong>Ejemplo paso a paso:</strong>
+            <pre>Estado q0, lee '1' → transición q0,1 -> q1,0,R → escribe 0, cambia a q1, mueve cabezal a la derecha.</pre>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <footer style="margin-top:14px">AutoGram — Interfaz didáctica. (prototipo para proyecto universitario).</footer>
+</div>
+
+<script>
+// Utilidad corta
+function $(id){return document.getElementById(id)}
+
+let ttsEnabled = false;
+let currentModule = 'GIC';
+let productions = {}; 
+let startSymbol = 'S';
+let derivationSteps = [];
+let derivationIndex = 0;
+let derivationFound = false;
+
+// Parseo de reglas de gramática (GIC/GDC)
+function parseInputGrammar(text){
+  const prods = {};
+  const lines = text.split(/\n+/).map(l=>l.trim()).filter(Boolean);
+  for(const l of lines){
+    const parts = l.split(/->|→/);
+    if(parts.length < 2) continue;
+    const A = parts[0].trim();
+    const rhs = parts.slice(1).join('->').trim();
+    const alts = rhs.split('|').map(a=>a.trim()).filter(Boolean);
+    for(let alt of alts){
+      if(alt.toLowerCase() === 'eps' || alt.toLowerCase() === 'epsilon' || alt === 'ε') alt = '';
+      if(!prods[A]) prods[A] = [];
+      prods[A].push(alt);
+    }
+  }
+  return prods;
+}
+
+// Inferir N, T, P, S
+function inferTuple(prods){
+  const N = new Set();
+  const T = new Set();
+  const P = [];
+
+  for(const A in prods){
+    // Considerar símbolos de lado izquierdo como secuencia literal (útil para GDC)
+    // Detectamos No terminales como letras mayúsculas individuales
+    for(const ch of A){
+      if(/[A-Z]/.test(ch)) N.add(ch);
+      else if(ch !== '') T.add(ch);
+    }
+    for(const r of prods[A]){
+      P.push({lhs:A, rhs:r});
+      for(const ch of r){
+        if(/[A-Z]/.test(ch)) N.add(ch);
+        else if(ch !== '') T.add(ch);
+      }
+    }
+  }
+  let start = 'S';
+  for(const nt of N){start = nt;break}
+  return {N:Array.from(N).sort(), T:Array.from(T).filter(x=>x!=='').sort(), P:P, S:start};
+}
+
+function showTupleFromProds(prods){
+  const t = inferTuple(prods);
+  startSymbol = t.S || 'S';
+  $('startSymbol').textContent = startSymbol;
+  $('nonterminals').innerHTML = '';
+  t.N.forEach(x=>{const e=document.createElement('div');e.className='chip';e.textContent=x;$('nonterminals').appendChild(e)});
+  $('terminals').innerHTML = '';
+  t.T.forEach(x=>{const e=document.createElement('div');e.className='chip';e.textContent=x;$('terminals').appendChild(e)});
+  const pLines = t.P.map(p=>`${p.lhs} -> ${p.rhs === '' ? 'ε' : p.rhs}`);
+  $('tupleBox').textContent = `(N, T, P, S)\nN={${t.N.join(', ')}}\nT={${t.T.join(', ')}}\nP:\n${pLines.join('\n')}`;
+}
+
+function updateModuleDesc(){
+  const desc = $('moduleDesc');
+  const tut = $('moduleTutorial');
+  tut.style.display = 'block';
+  if(currentModule === 'GIC'){
+    desc.textContent = 'Gramáticas Independientes del Contexto (GIC): reglas cuyo lado izquierdo es un solo no terminal. Se usan para describir lenguajes como expresiones aritméticas o paréntesis balanceados.';
+    tut.innerHTML = `
+      <strong>¿Qué es una GIC?</strong>
+      <p>Es una colección de reglas que reemplazan un no terminal por una secuencia de terminales y no terminales. Por ejemplo S -> a S b | eps describe cadenas con igual número de a y b en orden.</p>
+      <strong>¿Para qué sirve?</strong>
+      <p>Para definir lenguajes estructurados como expresiones, árboles sintácticos y más.</p>
+      <strong>Mini-ejemplos:</strong>
+      <ul>
+        <li><code>S -> (S)S | eps</code> — balance de paréntesis. Paso: S → (S)S → (() )S → ()S → ()</li>
+        <li><code>S -> a S b | eps</code> — lenguaje a^n b^n. Paso: S → aSb → aaSbb → aabb</li>
+      </ul>
+      <strong>¿Cómo leer una regla?</strong>
+      <p>La flecha → significa "puedo reemplazar". "eps" es cadena vacía.</p>
+    `;
+  } else if(currentModule === 'GDC'){
+    desc.textContent = 'Gramáticas Dependientes del Contexto (GDC): las reglas pueden depender del contexto (el lado izquierdo puede ser una secuencia de símbolos). Útiles para lenguajes más complejos.';
+    tut.innerHTML = `
+      <strong>¿Qué es una GDC?</strong>
+      <p>Las reglas pueden tener contexto: por ejemplo 'CB -> BC' cambia el orden cuando C está seguido por B.</p>
+      <strong>Ejemplos:</strong>
+      <ul>
+        <li><code>CB -> BC</code> — reordena símbolos por contexto.</li>
+        <li><code>aA -> aa</code> — duplica 'a' cuando aparece antes de A.</li>
+        <li><code>S -> aSBC | abC\nCB -> BC\n... </code> — mezcla reglas contextuales para generar a^n b^n c^n.</li>
+      </ul>
+      <strong>Analogía:</strong>
+      <p>Piensa en reescritura con "condiciones locales": solo aplica la regla cuando la secuencia a la izquierda coincide exactamente.</p>
+    `;
+  } else if(currentModule === 'TUR'){
+    desc.textContent = 'Máquina de Turing: modelo de cómputo con cinta infinita, cabezal y conjunto de estados. Es capaz de simular cualquier algoritmo paso a paso.';
+    tut.innerHTML = `
+      <strong>Resumen corto:</strong>
+      <p>Define transiciones: si estás en estado q y lees símbolo s, escribe x, ve a estado p y mueve el cabezal L/R.</p>
+      <strong>Ejemplo:</strong>
+      <pre>q0,1 -> q1,0,R  (si en q0 lees 1, escribe 0, ve a q1 y mueve a la derecha)</pre>
+      <strong>Mini-tutorial:</strong>
+      <ol>
+        <li>Inicializa la cinta con la cadena (usa '_' para espacios en blanco si necesitas).</li>
+        <li>Define transiciones claras. Las máquinas terminan cuando no hay transición definida para la lectura actual.</li>
+      </ol>
+    `;
+  }
+}
+
+function speakIf(text){
+  if(ttsEnabled && 'speechSynthesis' in window){
+    const u = new SpeechSynthesisUtterance(text); u.lang = 'es-ES'; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+  }
+}
+
+// Búsqueda por anchura para GIC (aplica reglas para el primer no terminal encontrado)
+function findDerivationBFS(prods, start, target){
+  const MAX = 8000;
+  const visited = new Set();
+  const queue = [];
+  queue.push({chain:start, history:[`Partimos de: ${start}`]});
+  visited.add(start);
+  let nodes = 0;
+
+  while(queue.length>0){
+    const node = queue.shift(); nodes++;
+    if(nodes>MAX) return {found:false, steps: node.history.concat([`⏳ Límite de exploración alcanzado (${MAX}). Se exploraron ${nodes} configuraciones.`])};
+    const current = node.chain;
+    if(current === target) return {found:true, steps: node.history.concat([`Cadena objetivo alcanzada: '${target === '' ? 'ε' : target}'`])};
+    // buscar primer no terminal (GIC)
+    let pos = -1;
+    for(let i=0;i<current.length;i++){ if(/[A-Z]/.test(current[i])){ pos=i; break; }}
+    if(pos === -1) continue;
+    const nonT = current[pos];
+    const rules = prods[nonT];
+    if(!rules) continue;
+    for(const rhs of rules){
+      const next = current.slice(0,pos) + rhs + current.slice(pos+1);
+      if(next.length > target.length*2 + 12) continue;
+      if(visited.has(next)) continue;
+      visited.add(next);
+      const displayRhs = rhs === '' ? 'ε' : rhs;
+      const newHistory = node.history.concat([`Ahora reemplazamos el no terminal ${nonT} por la regla ${nonT} → ${displayRhs}. Resultado: '${next === '' ? 'ε' : next}'`]);
+      queue.push({chain:next, history:newHistory});
+    }
+  }
+  return {found:false, steps:["❌ No se encontró derivación completa.", `Se exploraron ${nodes} configuraciones posibles.`, "Sugerencia: revisa el formato o prueba una cadena más simple."]};
+}
+
+// Búsqueda amplia que funciona también para GDC
+function findDerivationBFS_GDC(prods, start, target){
+  const MAX = 8000;
+  const visited = new Set();
+  const queue = [];
+  queue.push({chain:start, history:[`Partimos de: ${start}`]});
+  visited.add(start);
+  let nodes = 0;
+  let isGIC = true;
+  for(const lhs in prods){ if(lhs.length !== 1 || !/[A-Z]/.test(lhs)) { isGIC = false; break; }}
+
+  while(queue.length>0){
+    const node = queue.shift(); nodes++;
+    if(nodes>MAX) return {found:false, steps: node.history.concat([`⏳ Límite de exploración alcanzado (${MAX}). Se exploraron ${nodes} configuraciones.`, isGIC ? '💡 Esta gramática parece ser GIC. Prueba el módulo GIC para mayor eficiencia.' : ''])};
+    const current = node.chain;
+    if(current === target) return {found:true, steps: node.history.concat([`Cadena objetivo alcanzada: '${target === '' ? 'ε' : target}'`])};
+
+    let appliedAny = false;
+    for(const lhs in prods){
+      const rules = prods[lhs];
+      for(const rhs of rules){
+        if(isGIC && lhs.length===1 && /[A-Z]/.test(lhs)){
+          for(let i=0;i<current.length;i++){
+            if(current[i] === lhs){
+              const next = current.slice(0,i) + rhs + current.slice(i+1);
+              if(next.length <= target.length*2 + 12 && !visited.has(next)){
+                visited.add(next); appliedAny = true;
+                const displayRhs = rhs === '' ? 'ε' : rhs;
+                const newHistory = node.history.concat([`Aplicamos ${lhs} → ${displayRhs} en posición ${i}. Nueva cadena: '${next === '' ? 'ε' : next}'`]);
+                queue.push({chain:next, history:newHistory});
+              }
+            }
+          }
+        } else {
+          // buscar la subcadena lhs en todas las posiciones
+          let pos = 0;
+          while(pos <= current.length - lhs.length){
+            if(current.slice(pos,pos+lhs.length) === lhs){
+              const next = current.slice(0,pos) + rhs + current.slice(pos+lhs.length);
+              if(next.length <= target.length*2 + 12 && !visited.has(next)){
+                visited.add(next); appliedAny = true;
+                const displayRhs = rhs === '' ? 'ε' : rhs;
+                const newHistory = node.history.concat([`Aplicamos la regla contextual ${lhs} → ${displayRhs} en posición ${pos}. Resultado: '${next === '' ? 'ε' : next}'`]);
+                queue.push({chain:next, history:newHistory});
+              }
+            }
+            pos++;
+          }
+        }
+      }
+    }
+
+    if(!appliedAny && current !== target){
+      return {found:false, steps: node.history.concat(["🛑 No se pueden aplicar más reglas.", `Cadena actual: '${current === '' ? 'ε' : current}'`, `Objetivo: '${target === '' ? 'ε' : target}'`, "Conclusión: La cadena NO pertenece al lenguaje generado por esta gramática.", isGIC ? '💡 Nota: Esta gramática parece GIC — prueba el módulo GIC.' : ''])};
+    }
+  }
+  return {found:false, steps:["❌ No se encontró derivación completa.", `Se exploraron ${nodes} configuraciones posibles.`]};
+}
+
+function autoRun(){
+  if(Object.keys(productions).length === 0){ alert('Carga primero una gramática.'); return; }
+  const raw = $('inputString').value.trim(); if(raw===''){ alert('Escribe la cadena a probar.'); return; }
+  const target = (raw==='eps' || raw==='epsilon' || raw==='ε') ? '' : raw;
+  $('stepBox').textContent = 'Ejecutando...'; $('resultMessage').innerHTML = '';
+  setTimeout(()=>{
+    let result;
+    if(currentModule === 'GIC') result = findDerivationBFS(productions, startSymbol, target);
+    else if(currentModule === 'GDC') result = findDerivationBFS_GDC(productions, startSymbol, target);
+    derivationIndex = 0; derivationFound = result.found; derivationSteps = result.steps || [];
+    if(derivationFound){
+      $('stepBox').textContent = '✅ Derivación encontrada:\n\n' + derivationSteps.join('\n\n');
+      $('resultMessage').innerHTML = '<div class="success">✅ ¡La cadena SÍ pertenece al lenguaje generado por la gramática!</div>';
+      speakIf('Derivación encontrada. La cadena sí pertenece al lenguaje.');
+    } else {
+      $('stepBox').textContent = derivationSteps.join('\n\n');
+      $('resultMessage').innerHTML = '<div class="error">❌ La cadena NO pertenece al lenguaje generado por la gramática.</div>';
+      speakIf('No se encontró derivación. La cadena no pertenece al lenguaje.');
+    }
+  },120);
+}
+
+// Pestañas
+function switchToGIC(){ currentModule='GIC'; $('advancedSection').style.display='none'; $('tabGIC').className='btn'; $('tabGDC').className='btn ghost'; $('tabTUR').className='btn ghost'; updateModuleDesc(); updateExamplesVisibility(); }
+function switchToGDC(){ currentModule='GDC'; $('advancedSection').style.display='none'; $('tabGIC').className='btn ghost'; $('tabGDC').className='btn'; $('tabTUR').className='btn ghost'; updateModuleDesc(); updateExamplesVisibility(); }
+function switchToTuring(){ currentModule='TUR'; $('advancedSection').style.display='block'; $('tabGIC').className='btn ghost'; $('tabGDC').className='btn ghost'; $('tabTUR').className='btn'; updateModuleDesc(); updateExamplesVisibility(); }
+
+function updateExamplesVisibility(){
+  // aquí se podrían filtrar opciones, pero dejamos visibles todos los grupos
+  $('examples').value = '';
+}
+
+// Inicialización de listeners
+document.addEventListener('DOMContentLoaded', function(){
+  $('tabGIC').addEventListener('click', switchToGIC);
+  $('tabGDC').addEventListener('click', switchToGDC);
+  $('tabTUR').addEventListener('click', switchToTuring);
+
+  $('loadGrammar').addEventListener('click', function(){
+    const text = $('grammarInput').value.trim();
+    if(!text){ alert('Escribe la gramática antes de cargar.'); return; }
+    productions = parseInputGrammar(text);
+    if(Object.keys(productions).length === 0){ $('stepBox').textContent = 'No se detectaron reglas válidas.'; return; }
+    startSymbol = Object.keys(productions)[0];
+    showTupleFromProds(productions);
+    $('status').textContent = 'Gramática cargada';
+    speakIf('Gramática cargada');
+  });
+
+  $('clearGrammar').addEventListener('click', function(){
+    $('grammarInput').value=''; $('tupleBox').textContent='(N, T, P, S)'; $('nonterminals').innerHTML=''; $('terminals').innerHTML=''; $('startSymbol').textContent='S'; $('stepBox').textContent='Aquí aparecerán los pasos. Presiona "Iniciar análisis".'; $('resultMessage').innerHTML=''; productions = {};
+  });
+
+  $('startAnalysis').addEventListener('click', function(){
+    if(Object.keys(productions).length === 0){ alert('Primero carga una gramática válida.'); return; }
+    const raw = $('inputString').value.trim(); if(raw===''){ alert('Escribe la cadena que deseas probar.'); return; }
+    const target = (raw==='eps' || raw==='epsilon' || raw==='ε') ? '' : raw;
+    $('stepBox').textContent = 'Analizando...'; $('resultMessage').innerHTML = '';
+    setTimeout(()=>{
+      let result;
+      if(currentModule === 'GIC') result = findDerivationBFS(productions, startSymbol, target);
+      else if(currentModule === 'GDC') result = findDerivationBFS_GDC(productions, startSymbol, target);
+      derivationSteps = result.steps || [];
+      derivationIndex = 0; derivationFound = result.found || false;
+      if(derivationFound){
+        $('stepBox').textContent = '✅ Se encontró una derivación. Presiona "Siguiente paso" para ver la explicación.';
+        $('resultMessage').innerHTML = '<div class="info">✅ Se encontró una derivación. Usa "Siguiente paso" para ver el proceso detallado.</div>';
+        speakIf('Se encontró una derivación.');
+      } else {
+        $('stepBox').textContent = derivationSteps.join('\n\n');
+        $('resultMessage').innerHTML = '<div class="error">❌ No se pudo encontrar una derivación completa.</div>';
+        speakIf('No se encontró derivación');
+      }
+    },100);
+  });
+
+  $('autoRun').addEventListener('click', autoRun);
+
+  $('nextStep').addEventListener('click', function(){
+    if(!derivationSteps || derivationSteps.length === 0){ $('stepBox').textContent = 'No hay análisis listo. Carga la gramática e inicia el análisis.'; return; }
+    if(derivationIndex < derivationSteps.length){
+      const step = derivationSteps[derivationIndex];
+      $('stepBox').textContent += (derivationIndex === 0 ? '' : '\n\n') + 'Paso ' + (derivationIndex + 1) + ': ' + step;
+      speakIf(step);
+      derivationIndex++;
+    } else {
+      $('stepBox').textContent += '\n\n✅ Fin del paso a paso.';
+      if(derivationFound) $('resultMessage').innerHTML = '<div class="success">✅ ¡Derivación completada! La cadena SÍ pertenece al lenguaje.</div>';
+      else $('resultMessage').innerHTML = '<div class="error">❌ Derivación incompleta. La cadena NO pertenece al lenguaje.</div>';
+    }
+  });
+
+  $('resetBtn').addEventListener('click', function(){
+    productions = {}; startSymbol = 'S'; derivationSteps = []; derivationFound = false; derivationIndex = 0;
+    $('grammarInput').value = ''; $('inputString').value = ''; $('tupleBox').textContent = '(N, T, P, S)'; $('nonterminals').innerHTML = ''; $('terminals').innerHTML = ''; $('startSymbol').textContent = 'S'; $('stepBox').textContent = 'Aquí aparecerán los pasos. Presiona "Iniciar análisis".'; $('resultMessage').innerHTML=''; speakIf('Restablecido');
+  });
+
+  $('toggleNarration').addEventListener('click', function(){ ttsEnabled = !ttsEnabled; $('toggleNarration').textContent = ttsEnabled ? 'Narración: ON' : 'Narración oral (TTS)'; });
+  $('bigText').addEventListener('click', function(){ document.body.style.fontSize = document.body.style.fontSize === '18px' ? '' : '18px'; $('bigText').textContent = document.body.style.fontSize === '18px' ? 'Texto normal' : 'Texto grande'; });
+
+  $('showDerivation').addEventListener('click', function(){ if(!derivationSteps || derivationSteps.length === 0){ alert('No hay derivación lista. Ejecuta un análisis.'); return; } $('stepBox').textContent = 'Derivación completa (resumida):\n\n' + derivationSteps.join('\n\n'); });
+
+  // Manejo de ejemplos pre-cargados
+  $('examples').addEventListener('change', function(e){
+    const value = e.target.value;
+    $('grammarInput').value = ''; $('inputString').value = '';
+    $('turingRules').value = ''; $('tapeInput').value = '';
+
+    if(value === 'gic_par'){
+      $('grammarInput').value = 'S -> (S)S | eps';
+      $('inputString').value = '()()';
+    } else if(value === 'gic_anbn'){
+      $('grammarInput').value = 'S -> a S b | eps';
+      $('inputString').value = 'aaabbb';
+    } else if(value === 'gic_arit'){
+      $('grammarInput').value = 'E -> E+E | (E) | n';
+      $('inputString').value = 'n+n';
+    } else if(value === 'gdc_dup'){
+      $('grammarInput').value = 'aA -> aa\nA -> b';
+      $('inputString').value = 'aab';
+    } else if(value === 'gdc_order'){
+      $('grammarInput').value = 'S -> aSBC | abC\nCB -> BC\nbB -> bb\nbC -> bc\ncC -> cc';
+      $('inputString').value = 'aabbcc';
+    } else if(value === 'gdc_ancn'){
+      $('grammarInput').value = 'S -> aSBC | abc\nCB -> BC\nB -> b\nC -> c';
+      $('inputString').value = 'aaabbbccc';
+    } else if(value === 't_inv'){
+      $('turingRules').value = 'q0,0 -> q0,1,R\nq0,1 -> q0,0,R\nq0,_ -> qf,_,R';
+      $('tapeInput').value = '101100';
+    } else if(value === 't_pal'){
+      $('turingRules').value = 'q0,0 -> q1,_,R\nq0,1 -> q2,_,R\nq0,_ -> qaccept,_,R\n// nota: este ejemplo es solo ilustrativo, necesita transiciones completas';
+      $('tapeInput').value = '101';
+    } else if(value === 't_sum'){
+      $('turingRules').value = 'q0,0 -> q0,0,R\nq0,1 -> q0,1,R\nq0,_ -> qaccept,_,R';
+      $('tapeInput').value = '1+1';
+    }
+
+    if(value !== '') setTimeout(()=>{$('loadGrammar').click();},120);
+  });
+
+  // Máquina de Turing
+  let turing = {trans:{}, tape:[], head:0, state:'', running:false, interval:null};
+
+  function parseTuringRules(text){
+    const trans = {};
+    const lines = text.split(/\n+/).map(l=>l.trim()).filter(Boolean);
+    for(const l of lines){
+      // aceptar formatos con '_' y permitir campos vacíos para write
+      const m = l.match(/^\s*([^,\s]+)\s*,\s*([^\s]+)\s*->\s*([^,\s]+)\s*,\s*([^\s]*)\s*,\s*([LR])\s*$/);
+      if(!m) continue;
+      const fromState = m[1], read = m[2], toState = m[3], write = m[4] === '' ? '_' : m[4], dir = m[5];
+      if(!trans[fromState]) trans[fromState] = {};
+      trans[fromState][read] = {to:toState, write, dir};
+    }
+    return trans;
+  }
+
+  function renderTape(){
+    const box = $('tapeBox'); box.innerHTML = '';
+    for(let i=0;i<turing.tape.length;i++){ const c=document.createElement('div'); c.className = 'cell' + (i===turing.head ? ' head' : ''); c.textContent = turing.tape[i] === undefined ? '_' : turing.tape[i]; box.appendChild(c); }
+    $('turingState').textContent = 'Estado: ' + (turing.state || '-');
+  }
+
+  $('turingInit').addEventListener('click', function(){
+    const trans = parseTuringRules($('turingRules').value);
+    turing.trans = trans;
+    const s = $('tapeInput').value.trim().split('');
+    if(s.length === 0){ alert('Introduce la cinta inicial.'); return; }
+    turing.tape = s.slice(); turing.head = 0; turing.state = 'q0'; renderTape(); speakIf('Máquina inicializada');
+  });
+
+  $('turingStep').addEventListener('click', function(){
+    if(!turing.state){ alert('Inicializa la máquina primero.'); return; }
+    const read = turing.tape[turing.head] === undefined ? '_' : turing.tape[turing.head];
+    const rule = (turing.trans[turing.state] || {})[read] || (turing.trans[turing.state] || {})['_'];
+    if(!rule){ speakIf('No hay transición definida. Máquina se detiene.'); $('turingState').textContent = 'Estado: ' + turing.state + ' (PARADA - No hay transición)'; return; }
+    turing.tape[turing.head] = rule.write === '_' ? '_' : rule.write; turing.state = rule.to; if(rule.dir === 'R') turing.head++; else if(rule.dir === 'L') turing.head--; if(turing.head < 0){ turing.tape.unshift('_'); turing.head = 0; } if(turing.head >= turing.tape.length) turing.tape.push('_'); renderTape();
+  });
+
+  $('turingRun').addEventListener('click', function(){
+    if(turing.running){ clearInterval(turing.interval); turing.running = false; $('turingRun').textContent = 'Ejecutar'; return; }
+    turing.running = true; $('turingRun').textContent = 'Pausar'; turing.interval = setInterval(()=>{ try{$('turingStep').click();}catch(e){ clearInterval(turing.interval); turing.running=false; $('turingRun').textContent='Ejecutar'; } },300);
+  });
+
+  $('turingReset').addEventListener('click', function(){ if(turing.interval) clearInterval(turing.interval); turing = {trans:{}, tape:[], head:0, state:'', running:false, interval:null}; $('tapeBox').innerHTML=''; $('turingState').textContent = 'Estado: -'; speakIf('Máquina reseteada'); });
+
+  // inicial
+  updateModuleDesc(); updateExamplesVisibility();
+});
+</script>
+</body>
+</html>
