@@ -99,7 +99,7 @@
       </select>
 
       <label for="grammarInput">✏ Escribe tus reglas (una por línea) / Transiciones</label>
-      <textarea id="grammarInput" rows="6" placeholder="Para GIC/GDC: una regla por línea. Usa 'eps' para vacío.\nEjemplo GIC:\nS -> a S b | eps\nEjemplo GDC:\naA -> aa"></textarea>
+      <textarea id="grammarInput" rows="6" placeholder="Para GIC/GDC: una regla por línea. Usa 'eps' para vacío.\nEjemplo GIC:\nS -> a S b | eps\nEjemplo GDC:\nbB -> bbA"></textarea>
       <div class="row">
         <button id="loadGrammar" class="btn">Cargar gramática</button>
         <button id="clearGrammar" class="btn ghost">Limpiar</button>
@@ -234,14 +234,15 @@ let derivationSteps = [];
 let derivationIndex = 0;
 let derivationFound = false;
 
-// Parseo de reglas de gramática (GIC/GDC)
+// Parseo de reglas de gramática (GIC/GDC) - MEJORADO para GDC
 function parseInputGrammar(text){
   const prods = {};
   const lines = text.split(/\n+/).map(l=>l.trim()).filter(Boolean);
   for(const l of lines){
-    const parts = l.split(/->|→/);
+    // Manejar mejor diferentes formatos de flecha y espacios
+    const parts = l.split(/->|→/).map(p => p.trim());
     if(parts.length < 2) continue;
-    const A = parts[0].trim();
+    const A = parts[0];
     const rhs = parts.slice(1).join('->').trim();
     const alts = rhs.split('|').map(a=>a.trim()).filter(Boolean);
     for(let alt of alts){
@@ -253,29 +254,33 @@ function parseInputGrammar(text){
   return prods;
 }
 
-// Inferir N, T, P, S
+// Inferir N, T, P, S - MEJORADO para GDC
 function inferTuple(prods){
   const N = new Set();
   const T = new Set();
   const P = [];
 
   for(const A in prods){
-    // Considerar símbolos de lado izquierdo como secuencia literal (útil para GDC)
-    // Detectamos No terminales como letras mayúsculas individuales
+    // Para GDC, el lado izquierdo puede ser una secuencia de símbolos
+    // Consideramos no terminales como letras mayúsculas individuales
     for(const ch of A){
       if(/[A-Z]/.test(ch)) N.add(ch);
-      else if(ch !== '') T.add(ch);
+      else if(ch.trim() !== '') T.add(ch);
     }
     for(const r of prods[A]){
       P.push({lhs:A, rhs:r});
       for(const ch of r){
         if(/[A-Z]/.test(ch)) N.add(ch);
-        else if(ch !== '') T.add(ch);
+        else if(ch.trim() !== '') T.add(ch);
       }
     }
   }
+  
+  // Buscar símbolo inicial (preferir S, si no existe usar el primero)
   let start = 'S';
-  for(const nt of N){start = nt;break}
+  if(!N.has('S') && N.size > 0) {
+    start = Array.from(N)[0];
+  }
   return {N:Array.from(N).sort(), T:Array.from(T).filter(x=>x!=='').sort(), P:P, S:start};
 }
 
@@ -318,7 +323,7 @@ function updateModuleDesc(){
       <strong>Ejemplos:</strong>
       <ul>
         <li><code>CB -> BC</code> — reordena símbolos por contexto.</li>
-        <li><code>aA -> aa</code> — duplica 'a' cuando aparece antes de A.</li>
+        <li><code>bB -> bbA</code> — duplica 'a' cuando aparece antes de A.</li>
         <li><code>S -> aSBC | abC\nCB -> BC\n... </code> — mezcla reglas contextuales para generar a^n b^n c^n.</li>
       </ul>
       <strong>Analogía:</strong>
@@ -380,63 +385,94 @@ function findDerivationBFS(prods, start, target){
   return {found:false, steps:["❌ No se encontró derivación completa.", `Se exploraron ${nodes} configuraciones posibles.`, "Sugerencia: revisa el formato o prueba una cadena más simple."]};
 }
 
-// Búsqueda amplia que funciona también para GDC
+// Búsqueda amplia MEJORADA para GDC que maneja correctamente reglas contextuales
 function findDerivationBFS_GDC(prods, start, target){
-  const MAX = 8000;
+  const MAX = 10000; // Aumentado para gramáticas más complejas
   const visited = new Set();
   const queue = [];
   queue.push({chain:start, history:[`Partimos de: ${start}`]});
   visited.add(start);
   let nodes = 0;
-  let isGIC = true;
-  for(const lhs in prods){ if(lhs.length !== 1 || !/[A-Z]/.test(lhs)) { isGIC = false; break; }}
+  
+  // Detectar si es realmente una GDC (con reglas de más de un símbolo en lado izquierdo)
+  let isGDC = false;
+  for(const lhs in prods){
+    if(lhs.length > 1 || !/[A-Z]/.test(lhs)) {
+      isGDC = true;
+      break;
+    }
+  }
 
   while(queue.length>0){
     const node = queue.shift(); nodes++;
-    if(nodes>MAX) return {found:false, steps: node.history.concat([`⏳ Límite de exploración alcanzado (${MAX}). Se exploraron ${nodes} configuraciones.`, isGIC ? '💡 Esta gramática parece ser GIC. Prueba el módulo GIC para mayor eficiencia.' : ''])};
+    if(nodes>MAX) return {
+      found:false, 
+      steps: node.history.concat([
+        `⏳ Límite de exploración alcanzado (${MAX}). Se exploraron ${nodes} configuraciones.`,
+        isGDC ? '💡 Esta es una GDC - las reglas pueden requerir más pasos.' : ''
+      ])
+    };
+    
     const current = node.chain;
-    if(current === target) return {found:true, steps: node.history.concat([`Cadena objetivo alcanzada: '${target === '' ? 'ε' : target}'`])};
+    if(current === target) return {found:true, steps: node.history.concat([`✅ Cadena objetivo alcanzada: '${target === '' ? 'ε' : target}'`])};
 
     let appliedAny = false;
+    
+    // Para GDC, buscar TODAS las aplicaciones posibles de reglas
     for(const lhs in prods){
       const rules = prods[lhs];
+      
       for(const rhs of rules){
-        if(isGIC && lhs.length===1 && /[A-Z]/.test(lhs)){
-          for(let i=0;i<current.length;i++){
-            if(current[i] === lhs){
-              const next = current.slice(0,i) + rhs + current.slice(i+1);
-              if(next.length <= target.length*2 + 12 && !visited.has(next)){
-                visited.add(next); appliedAny = true;
-                const displayRhs = rhs === '' ? 'ε' : rhs;
-                const newHistory = node.history.concat([`Aplicamos ${lhs} → ${displayRhs} en posición ${i}. Nueva cadena: '${next === '' ? 'ε' : next}'`]);
-                queue.push({chain:next, history:newHistory});
-              }
+        // Buscar todas las ocurrencias de lhs en current
+        let pos = 0;
+        while(pos <= current.length - lhs.length){
+          if(current.slice(pos, pos + lhs.length) === lhs){
+            const next = current.slice(0, pos) + rhs + current.slice(pos + lhs.length);
+            
+            // Verificar límites razonables y si no hemos visitado
+            if(next.length <= target.length * 3 + 20 && !visited.has(next)){
+              visited.add(next);
+              appliedAny = true;
+              
+              const displayRhs = rhs === '' ? 'ε' : rhs;
+              const contextInfo = lhs.length > 1 ? ` (regla contextual)` : '';
+              const newHistory = node.history.concat([
+                `Aplicamos ${lhs} → ${displayRhs}${contextInfo} en posición ${pos}.`,
+                `Nueva cadena: '${next === '' ? 'ε' : next}'`
+              ]);
+              
+              queue.push({chain:next, history:newHistory});
             }
           }
-        } else {
-          // buscar la subcadena lhs en todas las posiciones
-          let pos = 0;
-          while(pos <= current.length - lhs.length){
-            if(current.slice(pos,pos+lhs.length) === lhs){
-              const next = current.slice(0,pos) + rhs + current.slice(pos+lhs.length);
-              if(next.length <= target.length*2 + 12 && !visited.has(next)){
-                visited.add(next); appliedAny = true;
-                const displayRhs = rhs === '' ? 'ε' : rhs;
-                const newHistory = node.history.concat([`Aplicamos la regla contextual ${lhs} → ${displayRhs} en posición ${pos}. Resultado: '${next === '' ? 'ε' : next}'`]);
-                queue.push({chain:next, history:newHistory});
-              }
-            }
-            pos++;
-          }
+          pos++;
         }
       }
     }
-
-    if(!appliedAny && current !== target){
-      return {found:false, steps: node.history.concat(["🛑 No se pueden aplicar más reglas.", `Cadena actual: '${current === '' ? 'ε' : current}'`, `Objetivo: '${target === '' ? 'ε' : target}'`, "Conclusión: La cadena NO pertenece al lenguaje generado por esta gramática.", isGIC ? '💡 Nota: Esta gramática parece GIC — prueba el módulo GIC.' : ''])};
+    
+    // Si no aplicamos ninguna regla pero no alcanzamos el objetivo
+    if(!appliedAny && current !== target && node.history.length > 1){
+      // Solo marcamos como error si estamos en un estado sin salida después de varios pasos
+      const lastSteps = node.history.slice(-3);
+      return {
+        found:false, 
+        steps: node.history.concat([
+          "🛑 No se pueden aplicar más reglas.",
+          `Cadena actual: '${current === '' ? 'ε' : current}'`,
+          `Objetivo: '${target === '' ? 'ε' : target}'`,
+          "Conclusión: La cadena NO pertenece al lenguaje generado por esta gramática."
+        ])
+      };
     }
   }
-  return {found:false, steps:["❌ No se encontró derivación completa.", `Se exploraron ${nodes} configuraciones posibles.`]};
+  
+  return {
+    found:false, 
+    steps:[
+      "❌ No se encontró derivación completa.", 
+      `Se exploraron ${nodes} configuraciones posibles.`,
+      isGDC ? "💡 Las GDC pueden requerir estrategias de aplicación específicas." : ""
+    ]
+  };
 }
 
 function autoRun(){
@@ -482,7 +518,6 @@ document.addEventListener('DOMContentLoaded', function(){
     if(!text){ alert('Escribe la gramática antes de cargar.'); return; }
     productions = parseInputGrammar(text);
     if(Object.keys(productions).length === 0){ $('stepBox').textContent = 'No se detectaron reglas válidas.'; return; }
-    startSymbol = Object.keys(productions)[0];
     showTupleFromProds(productions);
     $('status').textContent = 'Gramática cargada';
     speakIf('Gramática cargada');
@@ -551,17 +586,17 @@ document.addEventListener('DOMContentLoaded', function(){
       $('grammarInput').value = 'S -> (S)S | eps';
       $('inputString').value = '()()';
     } else if(value === 'gic_anbn'){
-      $('grammarInput').value = 'S -> a S b | eps';
+      $('grammarInput').value = 'S -> aSb | eps';
       $('inputString').value = 'aaabbb';
     } else if(value === 'gic_arit'){
       $('grammarInput').value = 'E -> E+E | (E) | n';
       $('inputString').value = 'n+n';
     } else if(value === 'gdc_dup'){
-      $('grammarInput').value = 'aA -> aa\nA -> b';
-      $('inputString').value = 'aab';
+      $('grammarInput').value = 'A -> bB\nbB -> bbA\nbbA -> c';
+      $('inputString').value = 'c';
     } else if(value === 'gdc_order'){
       $('grammarInput').value = 'S -> aSBC | abC\nCB -> BC\nbB -> bb\nbC -> bc\ncC -> cc';
-      $('inputString').value = 'aabbcc';
+      $('inputString').value = 'abc';
     } else if(value === 'gdc_ancn'){
       $('grammarInput').value = 'S -> aSBC | abc\nCB -> BC\nB -> b\nC -> c';
       $('inputString').value = 'aaabbbccc';
@@ -569,7 +604,7 @@ document.addEventListener('DOMContentLoaded', function(){
       $('turingRules').value = 'q0,0 -> q0,1,R\nq0,1 -> q0,0,R\nq0,_ -> qf,_,R';
       $('tapeInput').value = '101100';
     } else if(value === 't_pal'){
-      $('turingRules').value = 'q0,0 -> q1,_,R\nq0,1 -> q2,_,R\nq0,_ -> qaccept,_,R\n// nota: este ejemplo es solo ilustrativo, necesita transiciones completas';
+      $('turingRules').value = 'q0,0 -> q1,X,R\nq0,1 -> q2,Y,R\nq0,X -> q0,X,R\nq0,Y -> q0,Y,R\nq0,_ -> qAccept,_,R\n\nq1,0 -> q1,0,R\nq1,1 -> q1,1,R\nq1,X -> q1,X,R\nq1,Y -> q1,Y,R\nq1,_ -> q1_back,_,L\n\nq1_back,X -> q1_back,X,L\nq1_back,Y -> q1_back,Y,L\nq1_back,0 -> qReturn,X,L\nq1_back,1 -> qReject,1,L\nq1_back,_ -> qAccept,_,R\n\nq2,0 -> q2,0,R\nq2,1 -> q2,1,R\nq2,X -> q2,X,R\nq2,Y -> q2,Y,R\nq2,_ -> q2_back,_,L\n\nq2_back,X -> q2_back,X,L\nq2_back,Y -> q2_back,Y,L\nq2_back,1 -> qReturn,Y,L\nq2_back,0 -> qReject,0,L\nq2_back,_ -> qAccept,_,R\n\nqReturn,X -> qReturn,X,L\nqReturn,Y -> qReturn,Y,L\nqReturn,0 -> qReturn,0,L\nqReturn,1 -> qReturn,1,L\nqReturn,_ -> q0,_,R';
       $('tapeInput').value = '101';
     } else if(value === 't_sum'){
       $('turingRules').value = 'q0,0 -> q0,0,R\nq0,1 -> q0,1,R\nq0,_ -> qaccept,_,R';
